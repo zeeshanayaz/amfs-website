@@ -2,46 +2,46 @@
   {
     "name": "Muslehuddin Campus",
     "type": "Main / Head Campus",
-    "address": "MR1/38, Suleman Street, Mithadar, Karachi",
-    "phone": "(+92) 21 324 10539",
-    "mapUrl": "https://www.google.com/maps/search/?api=1&query=MR1%2F38%2C%20Suleman%20Street%2C%20Mithadar%2C%20Karachi",
-    "image": "/images/logo.svg",
+    "address": "MR 1/38, Suleman Street, Mithadar, Karachi",
+    "phone": "(+92) 21 324 10539 - (+92) 315 2721744",
+    "mapUrl": "https://maps.app.goo.gl/utv1wgFmSg3McYPy6",
+    "image": "/images/campus/MuslehuddinCampus.webp",
     "placeholder": false
   },
   {
-    "name": "Campus 02",
-    "type": "Campus details coming soon",
-    "address": "Address details coming soon",
-    "phone": "Contact details coming soon",
+    "name": "Turabi Campus",
+    "type": "",
+    "address": "Sadaya street near napier thana bhimpoora, Karachi.",
+    "phone": "(+92) 318 2386527",
     "mapUrl": "",
-    "image": "/images/logo.svg",
-    "placeholder": true
+    "image": "/images/campus/TurabiCampus.webp",
+    "placeholder": false
   },
   {
-    "name": "Campus 03",
-    "type": "Campus details coming soon",
-    "address": "Address details coming soon",
-    "phone": "Contact details coming soon",
+    "name": "Ali Hajveri Campus",
+    "type": "",
+    "address": "Mezzanine floor, new poona wala arcade, opposite wafaq Urdu University, Baba e Urdu campus, near SUIT chand bibi road, Karachi.",
+    "phone": "(+92) 318 2240890",
     "mapUrl": "",
-    "image": "/images/logo.svg",
-    "placeholder": true
+    "image": "/images/campus/AliHajveriCampus.webp",
+    "placeholder": false
   },
   {
-    "name": "Campus 04",
-    "type": "Campus details coming soon",
-    "address": "Address details coming soon",
-    "phone": "Contact details coming soon",
-    "mapUrl": "",
-    "image": "/images/logo.svg",
-    "placeholder": true
+    "name": "Ghazali Campus",
+    "type": "",
+    "address": "Ground Floor, Dawood Apartment, Adjacent Fatimi Masjid, Jamshed Road # 03, Karachi.",
+    "phone": "(+92) 348 2977079",
+    "mapUrl": "https://maps.app.goo.gl/ryP4t4BQcw7AgPjd7",
+    "image": "/images/campus/GhazaliCampus.webp",
+    "placeholder": false
   },
   {
-    "name": "Campus 05",
-    "type": "Campus details coming soon",
-    "address": "Address details coming soon",
-    "phone": "Contact details coming soon",
-    "mapUrl": "",
-    "image": "/images/logo.svg",
-    "placeholder": true
+    "name": "Noori Campus",
+    "type": "",
+    "address": "Iqbal Mansion 1st floor near Saleh Bhai store opp Allah Rakha Park kharadar.",
+    "phone": "(+92) 315 1187168",
+    "mapUrl": "https://goo.gl/maps/QFWFtzUcEJbC2KaMA",
+    "image": "/images/campus/NooriCampus.webp",
+    "placeholder": false
   }
 ]
