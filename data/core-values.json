@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Academic Excellence",
+    "description": "We set high standards and help every learner build the skills to meet them.",
+    "icon": "book-open"
+  },
+  {
+    "title": "Islamic Values",
+    "description": "Faith, compassion, honesty, and service guide the way we learn and live.",
+    "icon": "sparkles"
+  },
+  {
+    "title": "Character Building",
+    "description": "We shape confident, responsible young people who lead with integrity.",
+    "icon": "heart-handshake"
+  },
+  {
+    "title": "Modern Education",
+    "description": "Relevant teaching and thoughtful technology prepare students for a changing world.",
+    "icon": "lightbulb"
+  },
+  {
+    "title": "Student Growth",
+    "description": "Every child is encouraged to discover strengths, take initiative, and keep growing.",
+    "icon": "trending-up"
+  },
+  {
+    "title": "Trust & Integrity",
+    "description": "Open communication and dependable care create a strong school community.",
+    "icon": "shield-check"
+  }
+]

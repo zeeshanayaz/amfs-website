@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Muslehuddin Campus",
+    "type": "Main / Head Campus",
+    "address": "MR1/38, Suleman Street, Mithadar, Karachi",
+    "phone": "(+92) 21 324 10539",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=MR1%2F38%2C%20Suleman%20Street%2C%20Mithadar%2C%20Karachi",
+    "image": "/images/logo.svg",
+    "placeholder": false
+  },
+  {
+    "name": "Campus 02",
+    "type": "Campus details coming soon",
+    "address": "Address details coming soon",
+    "phone": "Contact details coming soon",
+    "mapUrl": "",
+    "image": "/images/logo.svg",
+    "placeholder": true
+  },
+  {
+    "name": "Campus 03",
+    "type": "Campus details coming soon",
+    "address": "Address details coming soon",
+    "phone": "Contact details coming soon",
+    "mapUrl": "",
+    "image": "/images/logo.svg",
+    "placeholder": true
+  },
+  {
+    "name": "Campus 04",
+    "type": "Campus details coming soon",
+    "address": "Address details coming soon",
+    "phone": "Contact details coming soon",
+    "mapUrl": "",
+    "image": "/images/logo.svg",
+    "placeholder": true
+  },
+  {
+    "name": "Campus 05",
+    "type": "Campus details coming soon",
+    "address": "Address details coming soon",
+    "phone": "Contact details coming soon",
+    "mapUrl": "",
+    "image": "/images/logo.svg",
+    "placeholder": true
+  }
+]
