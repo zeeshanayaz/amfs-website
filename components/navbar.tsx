@@ -8,6 +8,7 @@ import { Menu, X } from 'lucide-react'
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/#campuses', label: 'Campuses' },
 ]
 
 export function Navbar() {
@@ -52,8 +53,13 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
+
           {/* Logo + School Name */}
-          <Link href="/" className="flex items-center gap-3 group" aria-label="Al Musleh Foundation School — Home">
+          <Link
+            href="/"
+            className="flex items-center gap-3 group"
+            aria-label="Al Musleh Foundation School — Home"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo.svg"
@@ -87,51 +93,42 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop nav + Coming Soon Badge */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Desktop nav + CTA */}
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Desktop nav links */}
-            <nav className="hidden sm:flex sm:items-center sm:gap-1" aria-label="Main navigation">
-              {navLinks.map(({ href, label }) => {
-                const isActive = pathname === href
+            <nav className="hidden sm:flex sm:items-center sm:gap-0.5" aria-label="Main navigation">
+              {navLinks.map(({ href, label, external }) => {
+                // Hash links (/#campuses) are scroll anchors — never mark as "active page"
+                const isActive = !external && !href.includes('#') && (
+                  href === '/' ? pathname === '/' : pathname === href
+                )
                 return (
                   <Link
-                    key={href}
+                    key={label}
                     href={href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noopener noreferrer' : undefined}
                     aria-current={isActive ? 'page' : undefined}
                     className={[
-                      'relative inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200',
+                      'relative inline-flex items-center px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200',
                       isActive
-                        ? 'bg-brand-navy text-white shadow-sm shadow-brand-navy/20'
+                        ? 'bg-brand-navy text-white font-semibold shadow-sm shadow-brand-navy/20'
                         : 'text-brand-charcoal hover:bg-brand-light hover:text-brand-navy',
                     ].join(' ')}
                   >
                     {label}
-                    {/* Gold underline dot for active state on non-pill */}
-                    {isActive && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-gold"
-                      />
-                    )}
                   </Link>
                 )
               })}
             </nav>
 
-            {/* Coming Soon Badge */}
-            <div className="flex items-center gap-2">
-              <span
-                aria-label="Website coming soon"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-navy text-white text-xs font-semibold tracking-wider uppercase select-none not-italic"
-              >
-                <span
-                  aria-hidden="true"
-                  className="w-1.5 h-1.5 rounded-full bg-brand-gold live-dot"
-                />
-                <span className="hidden xs:inline sm:inline">Coming Soon</span>
-                <span className="sm:hidden">Soon</span>
-              </span>
-            </div>
+            {/* Apply Now CTA — desktop */}
+            <a
+              href="/#join-amfs"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-brand-gold px-4 py-2 text-xs font-bold text-brand-navy shadow-sm shadow-brand-gold/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand-gold/25"
+            >
+              Apply Now
+            </a>
 
             {/* Mobile hamburger */}
             <button
@@ -153,7 +150,8 @@ export function Navbar() {
         aria-hidden="true"
         className="h-0.5 transition-opacity duration-300"
         style={{
-          background: 'linear-gradient(90deg, transparent, #F6DD24 30%, #F6DD24 70%, transparent)',
+          background:
+            'linear-gradient(90deg, transparent, #F6DD24 30%, #F6DD24 70%, transparent)',
           opacity: scrolled ? 0.6 : 1,
         }}
       />
@@ -164,7 +162,7 @@ export function Navbar() {
         aria-hidden={!mobileOpen}
         className={[
           'sm:hidden overflow-hidden transition-all duration-300 ease-in-out',
-          mobileOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0',
+          mobileOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0',
         ].join(' ')}
         style={{
           background: 'rgba(255,255,255,0.97)',
@@ -176,12 +174,18 @@ export function Navbar() {
           aria-label="Mobile navigation"
           className="px-4 py-4 flex flex-col gap-1"
         >
-          {navLinks.map(({ href, label }) => {
-            const isActive = pathname === href
+          {navLinks.map(({ href, label, external }) => {
+            // Hash links are scroll anchors — never mark as active
+            const isActive =
+              !external &&
+              !href.includes('#') &&
+              (href === '/' ? pathname === '/' : pathname === href)
             return (
               <Link
-                key={href}
+                key={label}
                 href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={[
                   'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200',
@@ -191,12 +195,22 @@ export function Navbar() {
                 ].join(' ')}
               >
                 {isActive && (
-                  <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0" />
+                  <span
+                    aria-hidden="true"
+                    className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0"
+                  />
                 )}
                 {label}
               </Link>
             )
           })}
+          {/* Apply Now in mobile */}
+          <a
+            href="/#join-amfs"
+            className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-brand-gold px-4 py-3 text-sm font-bold text-brand-navy"
+          >
+            Apply Now
+          </a>
         </nav>
       </div>
     </header>

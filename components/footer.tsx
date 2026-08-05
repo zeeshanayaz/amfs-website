@@ -171,37 +171,40 @@ export function Footer() {
             </address>
           </div>
 
-          {/* Column 3: What's coming */}
+          {/* Column 3: Quick links */}
           <div>
             <h3 className="font-serif font-semibold text-white text-base mb-5 flex items-center gap-2">
               <span
                 aria-hidden="true"
                 className="w-5 h-0.5 bg-brand-gold rounded-full"
               />
-              {"What's Coming"}
+              Quick Links
             </h3>
-            <ul className="space-y-2.5" aria-label="Upcoming website features">
-              {[
-                'Admissions & Enrollment',
-                'Academic Programs',
-                'Campus Life',
-                'Student Achievements',
-                'News & Events',
-                'Parent Portal',
-                'About Our School',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-2.5 text-white/70 text-sm"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="w-1 h-1 rounded-full bg-brand-gold flex-shrink-0"
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Footer navigation">
+              <ul className="space-y-2.5">
+                {[
+                  { label: 'Home', href: '/' },
+                  { label: 'About Us', href: '/about' },
+                  { label: 'Our Campuses', href: '/#campuses' },
+                  { label: 'Our Values', href: '/about#our-story' },
+                  { label: 'Contact Us', href: '' },
+                  { label: 'Apply for Admission', href: '' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="flex items-center gap-2.5 text-white/70 hover:text-white text-sm transition-colors duration-150"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="w-1 h-1 rounded-full bg-brand-gold flex-shrink-0"
+                      />
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
@@ -214,7 +217,7 @@ export function Footer() {
               &copy; {currentYear} Al Musleh Foundation School. All rights reserved.
             </p>
             <p className="text-white/30 text-xs">
-              Website under development. Coming soon.
+              Karachi, Pakistan
             </p>
           </div>
         </div>

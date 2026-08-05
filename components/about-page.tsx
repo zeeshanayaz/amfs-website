@@ -4,18 +4,17 @@ import {
   ArrowRight,
   BookOpen,
   Check,
-  ChevronRight,
   HeartHandshake,
   Lightbulb,
   MapPin,
-  Phone,
   ShieldCheck,
   Sparkles,
   TrendingUp,
   Users,
 } from 'lucide-react'
-import coreValues from '@/data/core-values.json'
-import campuses from '@/data/campuses.json'
+import { CampusesSection } from '@/components/campuses-section'
+import { CtaSection } from '@/components/cta-section'
+import { CoreValuesSection } from '@/components/core-values-section'
 
 const iconMap = {
   'book-open': BookOpen,
@@ -362,139 +361,10 @@ export function AboutPage() {
       </section>
 
       {/* ── Core Values ────────────────────────────────────────────── */}
-      <section
-        aria-labelledby="values-heading"
-        className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8"
-      >
-        <header className="text-center max-w-2xl mx-auto mb-14">
-          <SectionEyebrow>What guides us</SectionEyebrow>
-          <h2
-            id="values-heading"
-            className="font-serif font-bold text-brand-navy text-3xl sm:text-5xl leading-tight text-balance"
-          >
-            Core values that shape every day.
-          </h2>
-        </header>
-
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {coreValues.map((value) => {
-            const Icon = iconMap[value.icon as keyof typeof iconMap]
-            return (
-              <article
-                key={value.title}
-                className="group relative rounded-2xl border border-brand-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/10 hover:border-brand-royal/30"
-              >
-                {/* Top accent line on hover */}
-                <div
-                  aria-hidden="true"
-                  className="absolute top-0 left-6 right-6 h-0.5 rounded-full bg-brand-royal scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                />
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-sky/10 text-brand-royal transition-colors duration-200 group-hover:bg-brand-navy group-hover:text-white">
-                  <Icon className="h-5 w-5" />
-                </span>
-                {/* Gold dot accent */}
-                <div aria-hidden="true" className="w-6 h-0.5 bg-brand-gold rounded-full mt-6 mb-3" />
-                <h3 className="text-lg font-semibold text-brand-navy">{value.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-brand-dark-gray">{value.description}</p>
-              </article>
-            )
-          })}
-        </div>
-      </section>
+      <CoreValuesSection />
 
       {/* ── Campuses ───────────────────────────────────────────────── */}
-      <section
-        id="campuses"
-        aria-labelledby="campuses-heading"
-        className="bg-brand-navy py-24 text-white sm:py-32"
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div>
-              {/* Eyebrow in gold for dark bg */}
-              <div className="flex items-center gap-3 mb-4">
-                <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-                <span className="text-brand-gold text-[11px] font-semibold uppercase tracking-[0.3em]">
-                  Our campuses
-                </span>
-                <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-              </div>
-              <h2
-                id="campuses-heading"
-                className="font-serif text-4xl font-semibold sm:text-5xl text-balance"
-              >
-                Close to the communities we serve.
-              </h2>
-            </div>
-            <p className="max-w-md text-sm leading-7 text-white/65">
-              Five campuses across Karachi, united by one commitment to quality education.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {campuses.map((campus) => (
-              <article
-                key={campus.name}
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] transition-all duration-300 hover:bg-white/[0.12] hover:border-brand-sky/40 hover:-translate-y-1"
-              >
-                <div className="relative h-40 overflow-hidden rounded-t-2xl bg-white/[0.05] transition-colors duration-300 group-hover:bg-white/[0.09]">
-                  <Image
-                    src={campus.image}
-                    alt={campus.name}
-                    fill
-                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-xl font-semibold text-white">{campus.name}</h3>
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-brand-gold">
-                        {campus.type}
-                      </p>
-                    </div>
-                    {campus.placeholder && (
-                      <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] uppercase tracking-wider text-white/60">
-                        Updating
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-5 space-y-3 text-sm text-white/70">
-                    <p className="flex gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-sky" />
-                      {campus.address}
-                    </p>
-                    <p className="flex gap-2">
-                      <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-sky" />
-                      {campus.phone}
-                    </p>
-                  </div>
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {campus.mapUrl && (
-                      <a
-                        href={campus.mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full bg-brand-gold px-4 py-2 text-xs font-bold text-brand-navy transition-all duration-200 hover:bg-brand-gold/90 hover:shadow-md"
-                      >
-                        View on map <ArrowRight className="h-3.5 w-3.5" />
-                      </a>
-                    )}
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-white/80 transition-all duration-200 hover:border-white/40 hover:text-white"
-                    >
-                      View details <ChevronRight className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CampusesSection />
 
       {/* ── Why Families Choose Us ────────────────────────────────── */}
       <section
@@ -528,61 +398,7 @@ export function AboutPage() {
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────────── */}
-      <section className="px-4 pb-24 sm:px-6 sm:pb-32 lg:px-8">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-brand-royal px-6 py-14 text-center text-white shadow-2xl shadow-brand-royal/20 sm:px-12 sm:py-20">
-          {/* Decorative circles */}
-          <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem]">
-            <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-white/5" />
-            <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-brand-gold/10" />
-          </div>
-
-          <div className="relative z-10">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-              <span className="text-brand-gold text-[11px] font-semibold uppercase tracking-[0.3em]">
-                Take the next step
-              </span>
-              <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-            </div>
-
-            <h2 className="mx-auto mt-2 max-w-3xl font-serif text-4xl font-semibold sm:text-6xl">
-              Join the AMFS family.
-            </h2>
-
-            {/* Gold underline accent */}
-            <div aria-hidden="true" className="flex items-center justify-center gap-2 mt-4 mb-5">
-              <div className="w-8 h-0.5 bg-brand-gold/50 rounded-full" />
-              <div className="w-20 h-1 bg-brand-gold rounded-full" />
-              <div className="w-4 h-0.5 bg-brand-gold/50 rounded-full" />
-            </div>
-
-            <p className="mx-auto max-w-xl text-base leading-7 text-white/80">
-              Connect with our team and discover how Al Musleh Foundation School can support your
-              child&apos;s next chapter.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <a
-                href="mailto:almusleh.foundation@gmail.com"
-                className="rounded-full bg-white px-6 py-3.5 text-sm font-bold text-brand-navy transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                Contact us
-              </a>
-              <a
-                href="mailto:almusleh.foundation@gmail.com?subject=Admission%20enquiry"
-                className="rounded-full border border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/50 hover:-translate-y-0.5"
-              >
-                Apply for Admission
-              </a>
-              <a
-                href="mailto:almusleh.foundation@gmail.com?subject=Teaching%20application"
-                className="rounded-full border border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/50 hover:-translate-y-0.5"
-              >
-                Apply for Teaching
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection />
     </main>
   )
 }
