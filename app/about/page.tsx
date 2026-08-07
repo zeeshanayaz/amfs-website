@@ -6,7 +6,7 @@ import { ScrollToTop } from '@/components/scroll-to-top'
 
 export const metadata: Metadata = {
   title: 'About Us | Al Musleh Foundation School',
-  description: 'Learn about Al Musleh Foundation School, our story, values, vision, mission, campuses, and commitment to quality education in Karachi.',
+  description: 'Discover how Al Musleh Foundation School nurtures learning, character, and confidence across five Karachi campuses.',
 }
 
 export default function AboutRoute() {

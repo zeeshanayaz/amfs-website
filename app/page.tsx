@@ -24,7 +24,7 @@ export default function HomePage() {
         {/* <MarqueeBar /> */}
         <HomeAbout />
         <CoreValuesSection />
-        <CampusesSection showViewAll />
+        <CampusesSection />
         <CtaSection />
       </main>
       <Footer />
