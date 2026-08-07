@@ -21,7 +21,7 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content">
         <HomeHero />
-        <MarqueeBar />
+        {/* <MarqueeBar /> */}
         <HomeAbout />
         <CoreValuesSection />
         <CampusesSection showViewAll />
