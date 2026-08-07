@@ -1,101 +1,39 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, BookOpen } from 'lucide-react'
+import { ArrowRight, BookOpen, Heart, Users } from 'lucide-react'
+
+const highlights = [
+  { icon: BookOpen, title: 'Learning', text: 'Curious minds, confident voices.' },
+  { icon: Heart, title: 'Character', text: 'Values that guide every choice.' },
+  { icon: Users, title: 'Community', text: 'Families growing together.' },
+]
 
 export function HomeAbout() {
   return (
-    <section
-      aria-labelledby="home-about-heading"
-      className="bg-brand-off-white py-24 sm:py-32"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-
-          {/* Left: Decorative card */}
-          <div className="relative min-h-[440px] overflow-hidden rounded-[2rem] bg-brand-navy p-8 shadow-2xl shadow-brand-navy/20">
-            {/* Decorative ring */}
-            <div className="absolute -right-12 -top-12 h-52 w-52 rounded-full border-[30px] border-brand-sky/15" />
-            <div className="absolute -left-8 -bottom-8 h-36 w-36 rounded-full border-[20px] border-brand-gold/10" />
-
-            <div className="relative flex h-full flex-col justify-between rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-8 min-h-[380px]">
-              <div className="flex items-center justify-between">
-                <span className="rounded-full bg-brand-gold px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy">
-                  Our Foundation
-                </span>
-                <BookOpen className="h-7 w-7 text-brand-gold" />
-              </div>
-
-              {/* Stacked typographic statement */}
-              <div className="my-8">
-                <p className="font-serif text-5xl leading-[1.1] text-white sm:text-6xl">Learn.</p>
-                <p className="font-serif text-5xl leading-[1.1] text-brand-sky sm:text-6xl">Lead.</p>
-                <p className="font-serif text-5xl leading-[1.1] text-brand-gold sm:text-6xl">Live well.</p>
-              </div>
-
-              <p className="text-sm leading-6 text-white/60 max-w-xs">
-                A place where every learner is seen, supported, and inspired to grow.
-              </p>
-            </div>
+    <section aria-labelledby="home-about-heading" className="bg-brand-off-white py-20 sm:py-28">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 lg:px-8">
+        <div className="relative min-h-[450px]">
+          <div className="absolute left-0 top-10 h-[72%] w-[68%] overflow-hidden rounded-[2rem] border-8 border-white shadow-xl">
+            <Image src="/images/about-learning.png" alt="A child engaged in creative learning at AMFS" fill className="object-cover" />
           </div>
-
-          {/* Right: Text content */}
-          <div>
-            {/* Eyebrow */}
-            <div className="flex items-center gap-3 mb-6">
-              <span aria-hidden="true" className="h-px w-10 bg-brand-sky" />
-              <span className="text-brand-sky text-[11px] font-semibold uppercase tracking-[0.3em]">
-                Our Story
-              </span>
-              <span aria-hidden="true" className="h-px w-10 bg-brand-sky" />
-            </div>
-
-            <h2
-              id="home-about-heading"
-              className="font-serif text-4xl font-semibold leading-tight text-brand-navy sm:text-5xl text-balance"
-            >
-              Education with purpose at its heart.
-            </h2>
-
-            {/* Gold underline */}
-            <div aria-hidden="true" className="flex items-center gap-2 mt-4 mb-7">
-              <div className="w-6 h-0.5 bg-brand-gold/50 rounded-full" />
-              <div className="w-16 h-1 bg-brand-gold rounded-full" />
-            </div>
-
-            <div className="space-y-5 text-base leading-8 text-brand-dark-gray">
-              <p>
-                Al Musleh Foundation School exists to give children a strong beginning and a clear
-                sense of possibility. We bring together committed teachers, supportive families, and
-                a thoughtful learning environment where academic progress and personal growth move
-                together.
-              </p>
-              <p>
-                Across our five campuses in Karachi, we combine a modern approach to learning with
-                the timeless values that help students become thoughtful, courageous, and
-                compassionate members of society.
-              </p>
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-navy/15 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-navy/20"
-              >
-                Discover our story <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/#campuses"
-                className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-white px-6 py-3.5 text-sm font-semibold text-brand-navy transition-all duration-200 hover:border-brand-sky hover:text-brand-royal hover:-translate-y-0.5 hover:shadow-md"
-              >
-                View our campuses
-              </Link>
-            </div>
-
-            {/* Pull quote */}
-            <div className="mt-10 flex items-center gap-3 text-sm font-semibold text-brand-navy">
-              <span aria-hidden="true" className="h-px w-12 bg-brand-gold" />
-              Growing minds. Strong character.
-            </div>
+          <div className="absolute bottom-0 right-0 h-[62%] w-[62%] overflow-hidden rounded-[2rem] border-8 border-brand-navy shadow-xl">
+            <Image src="/images/about-classroom.png" alt="An AMFS classroom filled with collaborative learning" fill className="object-cover" />
           </div>
+          <div className="absolute left-1/2 top-0 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full bg-brand-gold shadow-lg">
+            <BookOpen className="h-9 w-9 text-brand-navy" aria-hidden="true" />
+          </div>
+          <span aria-hidden="true" className="absolute bottom-8 left-4 h-5 w-5 rounded-full bg-brand-sky" />
+        </div>
+
+        <div>
+          <div className="mb-5 flex items-center gap-3"><span aria-hidden="true" className="h-px w-10 bg-brand-sky" /><span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-sky">Our story</span></div>
+          <h2 id="home-about-heading" className="font-serif text-4xl font-semibold leading-tight text-brand-navy text-balance sm:text-5xl">Education with purpose at its heart.</h2>
+          <div aria-hidden="true" className="mt-5 h-1.5 w-20 rounded-full bg-brand-gold" />
+          <p className="mt-7 max-w-xl text-base leading-7 text-brand-dark-gray">At AMFS, strong beginnings grow into purposeful futures. We bring teachers, families, and a thoughtful learning environment together so every child is seen and supported.</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            {highlights.map(({ icon: Icon, title, text }) => <div key={title} className="flex items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-navy text-brand-gold"><Icon className="h-5 w-5" aria-hidden="true" /></span><div><h3 className="font-serif font-bold text-brand-navy">{title}</h3><p className="mt-0.5 text-sm leading-5 text-brand-dark-gray">{text}</p></div></div>)}
+          </div>
+          <div className="mt-9 flex flex-wrap gap-3"><Link href="/about" className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-royal">Discover our story <ArrowRight className="h-4 w-4" /></Link><Link href="/#campuses" className="inline-flex items-center rounded-full border border-brand-border bg-white px-6 py-3.5 text-sm font-semibold text-brand-navy transition hover:border-brand-sky">View campuses</Link></div>
         </div>
       </div>
     </section>

@@ -24,9 +24,9 @@ const merriweather = Merriweather({
 })
 
 export const metadata: Metadata = {
-  title: 'Al Musleh Foundation School — Coming Soon',
+  title: 'Al Musleh Foundation School — Nurturing Minds, Building Futures',
   description:
-    'A new digital experience is on its way for Al Musleh Foundation School. Explore admissions, academics, campuses, student life, achievements, events, and more — coming soon.',
+    'Al Musleh Foundation School offers quality education rooted in Islamic values and academic excellence across five campuses in Karachi.',
   keywords: [
     'Al Musleh Foundation School',
     'AMFS',

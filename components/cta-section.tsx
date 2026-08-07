@@ -1,71 +1,7 @@
+function SchoolIllustration() {
+  return <svg aria-hidden="true" viewBox="0 0 280 220" className="h-44 w-56 opacity-90 sm:h-52 sm:w-64"><path d="M30 190h220" stroke="#F6DD24" strokeWidth="5" strokeLinecap="round" /><path d="M52 190V94l88-58 88 58v96" fill="#3D63B8" stroke="#fff" strokeWidth="4" /><path d="M38 98l102-68 102 68" fill="none" stroke="#F6DD24" strokeWidth="6" strokeLinejoin="round" /><path d="M113 190v-55h34v55M72 111h26v28H72zm110 0h26v28h-26z" fill="#F6DD24" stroke="#243C7D" strokeWidth="3" /><path d="M140 30V16" stroke="#fff" strokeWidth="4" /><path d="M140 16l18 7-18 7z" fill="#F68A1F" /></svg>
+}
+
 export function CtaSection() {
-  return (
-    <section
-      id="join-amfs"
-      aria-labelledby="cta-heading"
-      className="px-4 py-24 sm:px-6 sm:py-32 lg:px-8 bg-brand-off-white"
-    >
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-brand-royal px-6 py-16 text-center text-white shadow-2xl shadow-brand-royal/25 sm:px-12 sm:py-24">
-        {/* Decorative background shapes */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem]">
-          <div className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-white/[0.06]" />
-          <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-brand-gold/[0.08]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full border border-white/[0.05]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full border border-white/[0.05]" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Eyebrow */}
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-            <span className="text-brand-gold text-[11px] font-semibold uppercase tracking-[0.3em]">
-              Join the AMFS Family
-            </span>
-            <span aria-hidden="true" className="h-px w-8 bg-brand-gold" />
-          </div>
-
-          <h2
-            id="cta-heading"
-            className="mx-auto font-serif text-4xl font-semibold sm:text-6xl text-balance max-w-3xl"
-          >
-            Ready to Start Your Journey?
-          </h2>
-
-          {/* Gold accent */}
-          <div aria-hidden="true" className="flex items-center justify-center gap-2 mt-5 mb-6">
-            <div className="w-8 h-0.5 bg-brand-gold/50 rounded-full" />
-            <div className="w-20 h-1.5 bg-brand-gold rounded-full" />
-            <div className="w-8 h-0.5 bg-brand-gold/50 rounded-full" />
-          </div>
-
-          <p className="mx-auto max-w-xl text-base leading-7 text-white/75 mb-10">
-            Connect with our team and discover how Al Musleh Foundation School can support your
-            child&apos;s next chapter. We&apos;d love to hear from you.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="mailto:almusleh.foundation@gmail.com"
-              className="rounded-full bg-white px-7 py-3.5 text-sm font-bold text-brand-navy shadow-lg shadow-brand-navy/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
-            >
-              Contact Us
-            </a>
-            <a
-              href="mailto:almusleh.foundation@gmail.com?subject=Admission%20enquiry"
-              className="rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/50 hover:-translate-y-0.5"
-            >
-              Apply for Admission
-            </a>
-            <a
-              href="mailto:almusleh.foundation@gmail.com?subject=Teaching%20application"
-              className="rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/50 hover:-translate-y-0.5"
-            >
-              Apply for Teaching
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
+  return <section id="join-amfs" aria-labelledby="cta-heading" className="bg-brand-off-white px-4 py-20 sm:px-6 sm:py-28 lg:px-8"><div className="relative mx-auto flex max-w-7xl overflow-hidden rounded-[2.5rem] bg-brand-royal px-6 py-14 text-white shadow-2xl shadow-brand-royal/25 sm:px-12 sm:py-20 lg:items-center lg:justify-between lg:px-20"><div aria-hidden="true" className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-brand-gold/10" /><div className="relative z-10 max-w-2xl"><div className="mb-5 flex items-center gap-3"><span aria-hidden="true" className="h-px w-8 bg-brand-gold" /><span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-gold">Join the AMFS family</span></div><h2 id="cta-heading" className="font-serif text-4xl font-semibold leading-tight text-balance sm:text-6xl">Give your child a place to flourish.</h2><p className="mt-5 max-w-xl text-base leading-7 text-white/75">Talk to our team about admissions, campuses, and your child&apos;s next step.</p><div className="mt-8 flex flex-wrap gap-3"><a href="mailto:almusleh.foundation@gmail.com?subject=Admission%20enquiry" className="rounded-full bg-white px-6 py-3.5 text-sm font-bold text-brand-navy shadow-lg transition hover:-translate-y-0.5">Explore admissions</a><a href="mailto:almusleh.foundation@gmail.com" className="rounded-full border border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10">Contact us</a></div></div><div className="relative hidden lg:block"><SchoolIllustration /></div></div></section>
 }
