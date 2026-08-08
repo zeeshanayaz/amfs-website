@@ -187,8 +187,9 @@ export function Footer() {
                   { label: 'About Us', href: '/about' },
                   { label: 'Our Campuses', href: '/#campuses' },
                   { label: 'Our Values', href: '/about#our-story' },
-                  { label: 'Contact Us', href: '' },
+                  { label: 'Contact Us', href: '/about#social-connect' },
                   { label: 'Apply for Admission', href: '' },
+                  { label: 'Careers', href: '/careers' },
                 ].map(({ label, href }) => (
                   <li key={label}>
                     <a
