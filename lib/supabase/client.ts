@@ -15,6 +15,11 @@ export type JobPost = {
   employment_type: string
   description: string
   requirements: string[]
+  campus_name: string
+  address: string
+  image_url: string | null
+  expires_at: string | null
+  is_active: boolean
 }
 
 export type JobApplication = {
@@ -35,7 +40,7 @@ export async function getActiveJobs() {
   const supabase = createClient()
   return supabase
     .from('job_posts')
-    .select('id, title, department, location, employment_type, description, requirements')
+    .select('id, title, department, location, employment_type, description, requirements, campus_name, address, image_url, expires_at, is_active')
     .eq('is_active', true)
     .order('created_at', { ascending: false })
 }
@@ -44,7 +49,7 @@ export async function getJobById(id: string) {
   const supabase = createClient()
   return supabase
     .from('job_posts')
-    .select('id, title, department, location, employment_type, description, requirements')
+    .select('id, title, department, location, employment_type, description, requirements, campus_name, address, image_url, expires_at, is_active')
     .eq('id', id)
     .eq('is_active', true)
     .maybeSingle()
