@@ -1,13 +1,33 @@
+'use client'
+
 import { Quote } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import type { Testimonial } from '@/lib/school-content'
 
-export default async function TestimonialsPage() {
-  const supabase = createClient()
-  const { data } = await supabase.from('testimonials').select('*').eq('is_published', true).order('display_order', { ascending: true }).order('created_at', { ascending: false })
-  const testimonials = (data ?? []) as Testimonial[]
+export default function TestimonialsPage() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    async function loadTestimonials() {
+      const { data } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_published', true)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: false })
+
+      setTestimonials((data ?? []) as Testimonial[])
+      setLoading(false)
+    }
+
+    void loadTestimonials()
+  }, [])
 
   return (
     <>
@@ -22,7 +42,11 @@ export default async function TestimonialsPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10">
-          {testimonials.length === 0 ? (
+          {loading ? (
+            <div className="rounded-3xl border border-brand-border bg-background p-16 text-center text-brand-dark-gray">
+              Loading testimonials…
+            </div>
+          ) : testimonials.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-brand-border bg-background p-16 text-center text-brand-dark-gray">
               Parent testimonials will appear here soon.
             </div>
