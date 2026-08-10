@@ -57,8 +57,8 @@ export function NewsEventsList({ items }: NewsEventsListProps) {
       </div>
 
       {selected ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-brand-navy/65 p-4 sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="news-event-title">
-          <div className="max-h-[92vh] w-full overflow-hidden rounded-t-3xl bg-background shadow-2xl sm:max-w-3xl sm:rounded-3xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand-navy/65 p-4" role="dialog" aria-modal="true" aria-labelledby="news-event-title">
+          <div className="flex h-full w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-background shadow-2xl sm:h-[96vh]">
             <div className="flex items-start justify-between gap-4 border-b border-brand-border p-6">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-orange">{selected.category}</p>
@@ -81,42 +81,44 @@ export function NewsEventsList({ items }: NewsEventsListProps) {
             </div>
 
             {selected.image_url ? (
-              <div className="overflow-hidden">
+              <div className="max-h-[40vh] overflow-hidden bg-brand-off-white">
                 <Image
                   src={selected.image_url}
                   alt={selected.title}
                   width={1200}
                   height={700}
-                  className="h-72 w-full object-cover"
+                  className="w-full object-contain"
                 />
               </div>
             ) : null}
 
-            <div className="space-y-6 p-6">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Type</p>
-                  <p className="mt-2 text-sm font-semibold text-brand-navy">{selected.category}</p>
-                </div>
-                {selected.event_date ? (
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="space-y-6">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Event date</p>
-                    <p className="mt-2 text-sm font-semibold text-brand-navy">{new Date(selected.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}</p>
+                    <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Type</p>
+                    <p className="mt-2 text-sm font-semibold text-brand-navy">{selected.category}</p>
                   </div>
-                ) : null}
+                  {selected.event_date ? (
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Event date</p>
+                      <p className="mt-2 text-sm font-semibold text-brand-navy">{new Date(selected.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}</p>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div>
+                  <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Summary</p>
+                  <p className="mt-2 text-sm leading-7 text-brand-dark-gray">{selected.excerpt}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Details</p>
+                  <p className="mt-2 whitespace-pre-line text-sm leading-7 text-brand-dark-gray">{selected.body}</p>
+                </div>
               </div>
 
-              <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Summary</p>
-                <p className="mt-2 text-sm leading-7 text-brand-dark-gray">{selected.excerpt}</p>
-              </div>
-
-              <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Details</p>
-                <p className="mt-2 whitespace-pre-line text-sm leading-7 text-brand-dark-gray">{selected.body}</p>
-              </div>
-
-              <div className="flex justify-end">
+              <div className="mt-8 flex justify-end">
                 <button
                   type="button"
                   onClick={() => setSelected(null)}
