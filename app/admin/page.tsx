@@ -1,18 +1,23 @@
 'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
-import { BriefcaseBusiness, LogOut, Plus, Trash2, Pencil, X, Mail, Newspaper, MessageSquareQuote } from 'lucide-react'
+import { BriefcaseBusiness, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-
-type Job = { id: string; title: string; description: string; department: string; employment_type: string; campus_name: string; location: string; address: string; image_url: string | null; expires_at: string | null; is_active: boolean }
-type NewsEvent = { id: string; title: string; category: string; excerpt: string; body: string; image_url: string | null; event_date: string | null; is_published: boolean }
-type Testimonial = { id: string; parent_name: string; student_name: string; thoughts: string; display_order: number; is_published: boolean }
-type ContactSubmission = { id: string; full_name: string; email: string; phone: string | null; subject: string; message: string; is_read: boolean; created_at: string }
-type FormState = Omit<Job, 'id'>
-type NewsFormState = Omit<NewsEvent, 'id' | 'is_published'>
-type TestimonialFormState = Omit<Testimonial, 'id' | 'is_published'>
-const emptyForm: FormState = { title: '', description: '', department: 'Teaching', employment_type: 'Full-time', campus_name: 'Main Campus', location: 'Karachi, Pakistan', address: 'Karachi, Pakistan', image_url: '', expires_at: '', is_active: true }
+import { ContactsSection } from './contacts-section'
+import { JobsSection } from './jobs-section'
+import { NewsSection } from './news-section'
+import { TestimonialsSection } from './testimonials-section'
+import type {
+  ContactSubmission,
+  FormState,
+  Job,
+  NewsEvent,
+  NewsFormState,
+  Testimonial,
+  TestimonialFormState,
+} from './types'
+import { emptyForm } from './types'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -22,8 +27,20 @@ export default function AdminDashboard() {
   const [contacts, setContacts] = useState<ContactSubmission[]>([])
   const [section, setSection] = useState<'jobs' | 'news' | 'testimonials' | 'contacts'>('jobs')
   const [form, setForm] = useState<FormState>(emptyForm)
-  const [newsForm, setNewsForm] = useState<NewsFormState>({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' })
-  const [testimonialForm, setTestimonialForm] = useState<TestimonialFormState>({ parent_name: '', student_name: '', thoughts: '', display_order: 0 })
+  const [newsForm, setNewsForm] = useState<NewsFormState>({
+    title: '',
+    category: 'News',
+    excerpt: '',
+    body: '',
+    image_url: '',
+    event_date: '',
+  })
+  const [testimonialForm, setTestimonialForm] = useState<TestimonialFormState>({
+    parent_name: '',
+    student_name: '',
+    thoughts: '',
+    display_order: 0,
+  })
   const [editingContent, setEditingContent] = useState<string | null>(null)
   const [editing, setEditing] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
@@ -33,77 +50,341 @@ export default function AdminDashboard() {
   async function load() {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.replace('/admin/login'); return }
+    if (!user) {
+      router.replace('/admin/login')
+      return
+    }
+
     const { data: admin } = await supabase.from('admin_users').select('id').eq('id', user.id).maybeSingle()
-    if (!admin) { await supabase.auth.signOut(); router.replace('/admin/login'); return }
-    const [{ data: jobData }, { data: newsData }, { data: testimonialData }, { data: contactData }] = await Promise.all([
-      supabase.from('job_posts').select('*').order('created_at', { ascending: false }),
-      supabase.from('news_events').select('*').order('created_at', { ascending: false }),
-      supabase.from('testimonials').select('*').order('display_order', { ascending: true }),
-      supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }),
-    ])
+    if (!admin) {
+      await supabase.auth.signOut()
+      router.replace('/admin/login')
+      return
+    }
+
+    const [{ data: jobData }, { data: newsData }, { data: testimonialData }, { data: contactData }] =
+      await Promise.all([
+        supabase.from('job_posts').select('*').order('created_at', { ascending: false }),
+        supabase.from('news_events').select('*').order('created_at', { ascending: false }),
+        supabase.from('testimonials').select('*').order('display_order', { ascending: true }),
+        supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }),
+      ])
+
     setJobs((jobData ?? []) as Job[])
     setNewsEvents((newsData ?? []) as NewsEvent[])
     setTestimonials((testimonialData ?? []) as Testimonial[])
     setContacts((contactData ?? []) as ContactSubmission[])
     setLoading(false)
   }
-  useEffect(() => { void load() }, [])
 
-  function openNew() { setEditing(null); setForm(emptyForm); setShowForm(true); setMessage('') }
-  function openEdit(job: Job) { setEditing(job.id); setForm({ ...job, image_url: job.image_url ?? '', expires_at: job.expires_at ? job.expires_at.slice(0, 10) : '' }); setShowForm(true); setMessage('') }
-  async function save(event: FormEvent<HTMLFormElement>) {
-    const supabase = createClient()
-    event.preventDefault(); setMessage('')
-    const payload = { ...form, image_url: form.image_url || null, expires_at: form.expires_at ? new Date(`${form.expires_at}T23:59:59`).toISOString() : null }
-    const result = editing ? await supabase.from('job_posts').update(payload).eq('id', editing) : await supabase.from('job_posts').insert(payload)
-    if (result.error) { setMessage(result.error.message); return }
-    setShowForm(false); await load()
+  useEffect(() => {
+    void load()
+  }, [])
+
+  function openNew() {
+    setEditing(null)
+    setForm(emptyForm)
+    setShowForm(true)
+    setMessage('')
   }
-  async function remove(id: string) { if (!window.confirm('Delete this job post?')) return; const supabase = createClient(); await supabase.from('job_posts').delete().eq('id', id); await load() }
-  async function toggle(job: Job) { const supabase = createClient(); await supabase.from('job_posts').update({ is_active: !job.is_active }).eq('id', job.id); await load() }
-  async function saveNews(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const supabase = createClient(); const payload = { ...newsForm, image_url: newsForm.image_url || null, event_date: newsForm.event_date ? new Date(`${newsForm.event_date}T12:00:00`).toISOString() : null }; const result = editingContent ? await supabase.from('news_events').update(payload).eq('id', editingContent) : await supabase.from('news_events').insert(payload); if (result.error) { setMessage(result.error.message); return }; setNewsForm({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setEditingContent(null); await load() }
-  async function saveTestimonial(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const supabase = createClient(); const result = editingContent ? await supabase.from('testimonials').update(testimonialForm).eq('id', editingContent) : await supabase.from('testimonials').insert(testimonialForm); if (result.error) { setMessage(result.error.message); return }; setTestimonialForm({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }); setEditingContent(null); await load() }
-  async function toggleContent(table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) { const supabase = createClient(); const key = 'is_published' in item ? item.is_published : false; await supabase.from(table).update({ is_published: !key }).eq('id', item.id); await load() }
-  async function removeContent(table: 'news_events' | 'testimonials', id: string) { if (!window.confirm('Delete this item?')) return; const supabase = createClient(); await supabase.from(table).delete().eq('id', id); await load() }
-  async function markContact(id: string) { const supabase = createClient(); await supabase.from('contact_submissions').update({ is_read: true }).eq('id', id); await load() }
-  async function logout() { const supabase = createClient(); await supabase.auth.signOut(); router.replace('/admin/login') }
 
-  if (loading) return <main className="grid min-h-screen place-items-center bg-brand-off-white text-brand-navy">Loading dashboard…</main>
-  return <main className="min-h-screen bg-brand-off-white text-brand-navy">
-    <header className="border-b border-brand-border bg-background px-6 py-5 sm:px-10"><div className="mx-auto flex max-w-7xl items-center justify-between"><div className="flex items-center gap-3"><div className="flex size-11 items-center justify-center rounded-xl bg-brand-navy text-brand-gold"><BriefcaseBusiness className="size-5" /></div><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">AMFS admin</p><h1 className="font-serif text-xl font-bold">School operations</h1></div></div><button onClick={logout} className="inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm font-semibold hover:bg-brand-light"><LogOut className="size-4" /> Sign out</button></div></header>
-    <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 sm:px-10 lg:grid-cols-[220px_1fr]">
-      <aside className="hidden lg:block">
-        <div className="rounded-2xl bg-brand-navy p-3 text-primary-foreground">
-          <p className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-brand-gold">Workspace</p>
-          <nav className="mt-2 space-y-2">
-            <button onClick={() => setSection('jobs')} className={`w-full rounded-xl px-3 py-3 text-sm font-bold text-left ${section === 'jobs' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}>Career posts</button>
-            <button onClick={() => setSection('news')} className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'news' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}>News & Events</button>
-            <button onClick={() => setSection('testimonials')} className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'testimonials' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}>Testimonials</button>
-            <button onClick={() => setSection('contacts')} className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'contacts' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}>Contact inbox</button>
-          </nav>
-        </div>
-      </aside>
-      <section>
-        {section === 'jobs' && <>
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Career management</p>
-              <h2 className="mt-2 font-serif text-4xl font-bold">Open roles</h2>
-              <p className="mt-2 text-brand-dark-gray">Create and manage opportunities across AMFS campuses.</p>
+  function openEdit(job: Job) {
+    setEditing(job.id)
+    setForm({
+      ...job,
+      image_url: job.image_url ?? '',
+      expires_at: job.expires_at ? job.expires_at.slice(0, 10) : '',
+    })
+    setShowForm(true)
+    setMessage('')
+  }
+
+  async function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setMessage('')
+    const supabase = createClient()
+
+    const payload = {
+      ...form,
+      image_url: form.image_url || null,
+      expires_at: form.expires_at ? new Date(`${form.expires_at}T23:59:59`).toISOString() : null,
+    }
+
+    const result = editing
+      ? await supabase.from('job_posts').update(payload).eq('id', editing)
+      : await supabase.from('job_posts').insert(payload)
+
+    if (result.error) {
+      setMessage(result.error.message)
+      return
+    }
+
+    setShowForm(false)
+    await load()
+  }
+
+  async function remove(id: string) {
+    if (!window.confirm('Delete this job post?')) return
+    const supabase = createClient()
+    await supabase.from('job_posts').delete().eq('id', id)
+    await load()
+  }
+
+  async function toggle(job: Job) {
+    const supabase = createClient()
+    await supabase.from('job_posts').update({ is_active: !job.is_active }).eq('id', job.id)
+    await load()
+  }
+
+  function openNewsEditor() {
+    setEditingContent('new')
+    setNewsForm({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' })
+    setMessage('')
+  }
+
+  async function saveNews(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setMessage('')
+
+    const supabase = createClient()
+
+    const payload = {
+      ...newsForm,
+      image_url: newsForm.image_url || null,
+      event_date: newsForm.event_date
+        ? new Date(`${newsForm.event_date}T12:00:00`).toISOString()
+        : null,
+    }
+
+    const result =
+      editingContent === 'new'
+        ? await supabase
+          .from('news_events')
+          .insert(payload)
+        : editingContent
+          ? await supabase
+            .from('news_events')
+            .update(payload)
+            .eq('id', editingContent)
+          : null
+
+    if (!result) {
+      setMessage('Unable to save update.')
+      return
+    }
+
+    if (result.error) {
+      console.error('Save news error:', result.error)
+      setMessage(result.error.message)
+      return
+    }
+
+    setNewsForm({
+      title: '',
+      category: 'News',
+      excerpt: '',
+      body: '',
+      image_url: '',
+      event_date: '',
+    })
+
+    setEditingContent(null)
+    await load()
+  }
+
+  function openTestimonialEditor() {
+    setEditingContent('new')
+    setTestimonialForm({ parent_name: '', student_name: '', thoughts: '', display_order: 0 })
+    setMessage('')
+  }
+
+  async function saveTestimonial(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setMessage('')
+
+    const supabase = createClient()
+
+    const result =
+      editingContent === 'new'
+        ? await supabase
+          .from('testimonials')
+          .insert(testimonialForm)
+        : editingContent
+          ? await supabase
+            .from('testimonials')
+            .update(testimonialForm)
+            .eq('id', editingContent)
+          : null
+
+    if (!result) {
+      setMessage('Unable to save testimonial.')
+      return
+    }
+
+    if (result.error) {
+      console.error('Save testimonial error:', result.error)
+      setMessage(result.error.message)
+      return
+    }
+
+    setTestimonialForm({
+      parent_name: '',
+      student_name: '',
+      thoughts: '',
+      display_order: 0,
+    })
+
+    setEditingContent(null)
+    await load()
+  }
+
+  async function toggleContent(table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) {
+    const supabase = createClient()
+    const key = 'is_published' in item ? item.is_published : false
+    await supabase.from(table).update({ is_published: !key }).eq('id', item.id)
+    await load()
+  }
+
+  async function removeContent(table: 'news_events' | 'testimonials', id: string) {
+    if (!window.confirm('Delete this item?')) return
+    const supabase = createClient()
+    await supabase.from(table).delete().eq('id', id)
+    await load()
+  }
+
+  async function markContact(id: string) {
+    const supabase = createClient()
+    await supabase.from('contact_submissions').update({ is_read: true }).eq('id', id)
+    await load()
+  }
+
+  async function logout() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.replace('/admin/login')
+  }
+
+  if (loading) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-brand-off-white text-brand-navy">
+        Loading dashboard�
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-brand-off-white text-brand-navy">
+      <header className="border-b border-brand-border bg-background px-6 py-5 sm:px-10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-brand-navy text-brand-gold">
+              <BriefcaseBusiness className="size-5" />
             </div>
-            <button onClick={openNew} className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-brand-royal"><Plus className="size-4" /> Add job post</button>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">AMFS admin</p>
+              <h1 className="font-serif text-xl font-bold">School operations</h1>
+            </div>
           </div>
-          {message && <p role="alert" className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{message}</p>}
-          <div className="grid gap-4">{jobs.length === 0 ? <div className="rounded-3xl border border-dashed border-brand-border bg-background p-12 text-center text-brand-dark-gray">No job posts yet. Create your first opportunity.</div> : jobs.map((job) => <article key={job.id} className="rounded-2xl border border-brand-border bg-background p-5 sm:p-6"><div className="flex flex-col justify-between gap-4 sm:flex-row"><div><div className="mb-2 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider"><span className={`rounded-full px-3 py-1 ${job.is_active ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'}`}>{job.is_active ? 'Active' : 'Inactive'}</span><span className="rounded-full bg-brand-gold/30 px-3 py-1">{job.employment_type}</span></div><h3 className="font-serif text-2xl font-bold">{job.title}</h3><p className="mt-1 text-sm text-brand-dark-gray">{job.campus_name} · {job.department}</p><p className="mt-3 line-clamp-2 text-sm leading-6 text-brand-dark-gray">{job.description}</p></div><div className="flex shrink-0 items-start gap-2"><button onClick={() => toggle(job)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{job.is_active ? 'Deactivate' : 'Activate'}</button><button onClick={() => openEdit(job)} aria-label={`Edit ${job.title}`} className="rounded-full border border-brand-border p-2 hover:bg-brand-light"><Pencil className="size-4" /></button><button onClick={() => remove(job.id)} aria-label={`Delete ${job.title}`} className="rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"><Trash2 className="size-4" /></button></div></div></article>)}</div>
-        </>}
-        {section === 'news' && <div><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Content management</p><h2 className="mt-2 font-serif text-4xl font-bold">News & Events</h2><p className="mt-2 text-brand-dark-gray">Publish announcements, school news, and upcoming events.</p></div><button onClick={() => { setEditingContent('new'); setNewsForm({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }) }} className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground"><Plus className="size-4" /> Add update</button></div><div className="grid gap-4">{newsEvents.map((item) => <article key={item.id} className="rounded-2xl border border-brand-border bg-background p-5"><div className="flex items-start justify-between gap-4"><div><span className="rounded-full bg-brand-light px-3 py-1 text-xs font-bold text-brand-royal">{item.is_published ? 'Published' : 'Draft'}</span><h3 className="mt-3 font-serif text-2xl font-bold">{item.title}</h3><p className="mt-2 text-sm text-brand-dark-gray">{item.category} · {item.excerpt}</p></div><div className="flex gap-2"><button onClick={() => toggleContent('news_events', item)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{item.is_published ? 'Unpublish' : 'Publish'}</button><button onClick={() => removeContent('news_events', item.id)} className="rounded-full border border-brand-border p-2 text-destructive"><Trash2 className="size-4" /></button></div></div></article>)}</div></div>}
-        {section === 'testimonials' && <div><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Community voices</p><h2 className="mt-2 font-serif text-4xl font-bold">Testimonials</h2><p className="mt-2 text-brand-dark-gray">Add parent reflections and choose when they appear publicly.</p></div><button onClick={() => { setEditingContent('new'); setTestimonialForm({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }) }} className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground"><Plus className="size-4" /> Add testimonial</button></div><div className="grid gap-4">{testimonials.map((item) => <article key={item.id} className="rounded-2xl border border-brand-border bg-background p-5"><div className="flex items-start justify-between gap-4"><div><span className="rounded-full bg-brand-light px-3 py-1 text-xs font-bold text-brand-royal">{item.is_published ? 'Published' : 'Draft'}</span><h3 className="mt-3 font-serif text-xl font-bold">{item.parent_name} · {item.student_name}</h3><p className="mt-2 text-sm leading-6 text-brand-dark-gray">{item.thoughts}</p></div><div className="flex gap-2"><button onClick={() => toggleContent('testimonials', item)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{item.is_published ? 'Unpublish' : 'Publish'}</button><button onClick={() => removeContent('testimonials', item.id)} className="rounded-full border border-brand-border p-2 text-destructive"><Trash2 className="size-4" /></button></div></div></article>)}</div></div>}
-        {section === 'contacts' && <div><div className="mb-8"><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Inbox</p><h2 className="mt-2 font-serif text-4xl font-bold">Contact submissions</h2><p className="mt-2 text-brand-dark-gray">Review questions and inquiries sent through the school website.</p></div><div className="grid gap-4">{contacts.length === 0 ? <div className="rounded-3xl border border-dashed border-brand-border bg-background p-12 text-center text-brand-dark-gray">No contact submissions yet.</div> : contacts.map((item) => <article key={item.id} className={`rounded-2xl border border-brand-border bg-background p-5 ${!item.is_read ? 'ring-2 ring-brand-gold/40' : ''}`}><div className="flex items-start justify-between gap-4"><div><div className="flex flex-wrap gap-3 text-sm"><span className="font-bold">{item.full_name}</span><a href={`mailto:${item.email}`} className="text-brand-royal">{item.email}</a></div><h3 className="mt-3 font-serif text-xl font-bold">{item.subject}</h3><p className="mt-2 whitespace-pre-line text-sm leading-6 text-brand-dark-gray">{item.message}</p></div>{!item.is_read && <button onClick={() => markContact(item.id)} className="shrink-0 rounded-full bg-brand-navy px-3 py-2 text-xs font-bold text-primary-foreground">Mark read</button>}</div></article>)}</div></div>}
-      </section>
-    </div>
-    {(section === 'news' && editingContent) && <div className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/55 p-0 sm:items-center sm:p-6"><form onSubmit={saveNews} className="max-h-[94vh] w-full overflow-y-auto rounded-t-3xl bg-background p-6 shadow-2xl sm:max-w-2xl sm:rounded-3xl sm:p-8"><div className="mb-6 flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">News & Events</p><h2 className="mt-2 font-serif text-3xl font-bold">Update details</h2></div><button type="button" onClick={() => { setNewsForm({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setEditingContent(null) }} aria-label="Close form"><X className="size-5" /></button></div><div className="grid gap-4"><input required placeholder="Title" value={newsForm.title} onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><select value={newsForm.category} onChange={(e) => setNewsForm({ ...newsForm, category: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3"><option>News</option><option>Event</option><option>Announcement</option></select><input required placeholder="Short excerpt" value={newsForm.excerpt} onChange={(e) => setNewsForm({ ...newsForm, excerpt: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><textarea required rows={6} placeholder="Full story or event details" value={newsForm.body} onChange={(e) => setNewsForm({ ...newsForm, body: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><input type="url" placeholder="Optional image URL" value={newsForm.image_url ?? ''} onChange={(e) => setNewsForm({ ...newsForm, image_url: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><input type="date" value={newsForm.event_date ?? ''} onChange={(e) => setNewsForm({ ...newsForm, event_date: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><button className="rounded-full bg-brand-navy px-5 py-3 font-bold text-primary-foreground">Save update</button></div></form></div>}
-    {section === 'testimonials' && editingContent && <div className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/55 p-0 sm:items-center sm:p-6"><form onSubmit={saveTestimonial} className="max-h-[94vh] w-full overflow-y-auto rounded-t-3xl bg-background p-6 shadow-2xl sm:max-w-2xl sm:rounded-3xl sm:p-8"><div className="mb-6 flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Testimonials</p><h2 className="mt-2 font-serif text-3xl font-bold">Testimonial details</h2></div><button type="button" onClick={() => { setTestimonialForm({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }); setEditingContent(null) }} aria-label="Close form"><X className="size-5" /></button></div><div className="grid gap-4"><input required placeholder="Parent name" value={testimonialForm.parent_name} onChange={(e) => setTestimonialForm({ ...testimonialForm, parent_name: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><input required placeholder="Student name" value={testimonialForm.student_name} onChange={(e) => setTestimonialForm({ ...testimonialForm, student_name: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><textarea required rows={6} placeholder="Parent thoughts about the school" value={testimonialForm.thoughts} onChange={(e) => setTestimonialForm({ ...testimonialForm, thoughts: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><input type="number" min="0" placeholder="Display order" value={testimonialForm.display_order} onChange={(e) => setTestimonialForm({ ...testimonialForm, display_order: Number(e.target.value) })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3" /><button className="rounded-full bg-brand-navy px-5 py-3 font-bold text-primary-foreground">Save testimonial</button></div></form></div>}
-    {showForm && <div className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/55 p-0 sm:items-center sm:p-6"><div className="max-h-[94vh] w-full overflow-y-auto rounded-t-3xl bg-background p-6 shadow-2xl sm:max-w-3xl sm:rounded-3xl sm:p-8"><div className="mb-6 flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">{editing ? 'Edit opportunity' : 'New opportunity'}</p><h2 className="mt-2 font-serif text-3xl font-bold">Career post details</h2></div><button onClick={() => setShowForm(false)} aria-label="Close form" className="rounded-full p-2 hover:bg-brand-light"><X className="size-5" /></button></div><form onSubmit={save} className="grid gap-4 sm:grid-cols-2"><label className="grid gap-2 text-sm font-semibold sm:col-span-2">Job title<input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal outline-none focus:border-brand-royal" /></label><label className="grid gap-2 text-sm font-semibold">Department<select value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal"><option>Teaching</option><option>Administration</option><option>Support</option><option>Leadership</option></select></label><label className="grid gap-2 text-sm font-semibold">Job type<select value={form.employment_type} onChange={(e) => setForm({ ...form, employment_type: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></label><label className="grid gap-2 text-sm font-semibold">Campus name<input required value={form.campus_name} onChange={(e) => setForm({ ...form, campus_name: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal" /></label><label className="grid gap-2 text-sm font-semibold">Address<input required value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal" /></label><label className="grid gap-2 text-sm font-semibold sm:col-span-2">Image URL <span className="font-normal text-brand-dark-gray">(optional)</span><input type="url" value={form.image_url ?? ''} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal" /></label><label className="grid gap-2 text-sm font-semibold">Post expiry <span className="font-normal text-brand-dark-gray">(optional)</span><input type="date" value={form.expires_at ?? ''} onChange={(e) => setForm({ ...form, expires_at: e.target.value })} className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal" /></label><label className="flex items-center gap-3 pt-7 text-sm font-semibold"><input type="checkbox" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} className="size-4 accent-brand-royal" /> Active status</label><label className="grid gap-2 text-sm font-semibold sm:col-span-2">Description<textarea required minLength={10} rows={6} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="resize-y rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal" /></label><button className="rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-brand-royal sm:col-span-2">{editing ? 'Save changes' : 'Publish job post'}</button></form></div></div>}
-  </main>
+          <button
+            type="button"
+            onClick={logout}
+            className="inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm font-semibold hover:bg-brand-light"
+          >
+            <LogOut className="size-4" /> Sign out
+          </button>
+        </div>
+      </header>
+
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 sm:px-10 lg:grid-cols-[220px_1fr]">
+        <aside className="hidden lg:block">
+          <div className="rounded-2xl bg-brand-navy p-3 text-primary-foreground">
+            <p className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-brand-gold">Workspace</p>
+            <nav className="mt-2 space-y-2">
+              <button
+                type="button"
+                onClick={() => setSection('jobs')}
+                className={`w-full rounded-xl px-3 py-3 text-sm font-bold text-left ${section === 'jobs' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}
+              >
+                Career posts
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection('news')}
+                className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'news' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}
+              >
+                News & Events
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection('testimonials')}
+                className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'testimonials' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}
+              >
+                Testimonials
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection('contacts')}
+                className={`w-full rounded-xl px-3 py-3 text-sm font-medium text-left ${section === 'contacts' ? 'bg-brand-royal' : 'text-brand-off-white/80 hover:bg-brand-light'}`}
+              >
+                Contact inbox
+              </button>
+            </nav>
+          </div>
+        </aside>
+
+        <section>
+          {section === 'jobs' && (
+            <JobsSection
+              jobs={jobs}
+              message={message}
+              showForm={showForm}
+              form={form}
+              editing={editing}
+              onOpenNew={openNew}
+              onEdit={openEdit}
+              onRemove={remove}
+              onToggle={toggle}
+              onFormChange={setForm}
+              onSave={save}
+              onCloseForm={() => setShowForm(false)}
+            />
+          )}
+
+          {section === 'news' && (
+            <NewsSection
+              newsEvents={newsEvents}
+              editingContent={editingContent}
+              newsForm={newsForm}
+              message={message}
+              onOpenEditor={openNewsEditor}
+              onCloseEditor={() => setEditingContent(null)}
+              onNewsFormChange={setNewsForm}
+              onSaveNews={saveNews}
+              onTogglePublish={(item) => toggleContent('news_events', item)}
+              onRemove={(id) => removeContent('news_events', id)}
+            />
+          )}
+
+          {section === 'testimonials' && (
+            <TestimonialsSection
+              testimonials={testimonials}
+              editingContent={editingContent}
+              testimonialForm={testimonialForm}
+              message={message}
+              onOpenEditor={openTestimonialEditor}
+              onCloseEditor={() => setEditingContent(null)}
+              onTestimonialFormChange={setTestimonialForm}
+              onSaveTestimonial={saveTestimonial}
+              onTogglePublish={(item) => toggleContent('testimonials', item)}
+              onRemove={(id) => removeContent('testimonials', id)}
+            />
+          )}
+
+          {section === 'contacts' && (
+            <ContactsSection contacts={contacts} onMarkRead={markContact} />
+          )}
+        </section>
+      </div>
+    </main>
+  )
 }
