@@ -17,6 +17,20 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
 
+  const normalizePath = (p?: string) => {
+    if (!p) return '/' 
+    const trimmed = p.replace(/\/+$/g, '')
+    return trimmed === '' ? '/' : trimmed
+  }
+
+  const isActiveFor = (href: string, currentPath?: string) => {
+    const nHref = normalizePath(href)
+    const nPath = normalizePath(currentPath)
+    if (nHref === nPath) return true
+    // treat nested routes as active for parent route (e.g. /admin/login -> /admin)
+    return nHref !== '/' && nPath.startsWith(nHref + '/')
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
     onScroll()
@@ -99,10 +113,8 @@ export function Navbar() {
             {/* Desktop nav links */}
             <nav className="hidden sm:flex sm:items-center sm:gap-0.5" aria-label="Main navigation">
               {navLinks.map(({ href, label, external }) => {
-                // Hash links (/#campuses) are scroll anchors — never mark as "active page"
-                const isActive = !external && !href.includes('#') && (
-                  href === '/' ? pathname === '/' : pathname === href
-                )
+                // Hash links (/#campuses) are scroll anchors — never mark as "active page".
+                const isActive = !external && !href.includes('#') && isActiveFor(href, pathname)
                 return (
                   <Link
                     key={label}
@@ -176,11 +188,8 @@ export function Navbar() {
           className="px-4 py-4 flex flex-col gap-1"
         >
           {navLinks.map(({ href, label, external }) => {
-            // Hash links are scroll anchors — never mark as active
-            const isActive =
-              !external &&
-              !href.includes('#') &&
-              (href === '/' ? pathname === '/' : pathname === href)
+            // Hash links are scroll anchors — never mark as active.
+            const isActive = !external && !href.includes('#') && isActiveFor(href, pathname)
             return (
               <Link
                 key={label}

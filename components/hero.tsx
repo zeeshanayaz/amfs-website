@@ -68,7 +68,7 @@ export function Hero() {
         className="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.05] pointer-events-none select-none hidden xl:block pr-8"
       >
         <Image
-          src="/images/logo.png"
+          src="/images/logo.webp"
           alt=""
           width={500}
           height={500}

@@ -17,13 +17,7 @@ export default function AdminLoginPage() {
     setLoading(true)
     setError('')
     const supabase = createClient()
-    let { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-    if (signInError) {
-      await fetch('/api/admin/setup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
-      const retry = await supabase.auth.signInWithPassword({ email, password })
-      data = retry.data
-      signInError = retry.error
-    }
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
     if (signInError || !data.user) {
       setError('Invalid admin email or password.')
       setLoading(false)

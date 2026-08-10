@@ -81,6 +81,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`light bg-background ${inter.variable} ${playfair.variable} ${merriweather.variable}`}
+      data-scroll-behavior="smooth"
     >
       <body className="antialiased font-sans">{children}</body>
     </html>

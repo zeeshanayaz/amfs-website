@@ -60,7 +60,7 @@ export function HomeHero() {
         <div className="relative mx-auto w-full max-w-xl lg:mx-0">
           <div className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] bg-brand-sky" />
           <div className="relative overflow-hidden rounded-[2rem] border-8 border-brand-navy bg-brand-navy shadow-2xl shadow-brand-navy/20">
-            <Image src="/images/about-classroom.png" alt="Students learning together in an AMFS classroom" width={900} height={650} priority className="aspect-[4/3] w-full object-cover" />
+            <Image src="/images/about-classroom.webp" alt="Students learning together in an AMFS classroom" width={900} height={650} priority className="aspect-[4/3] w-full object-cover" />
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-2xl bg-white/95 p-4 shadow-lg backdrop-blur sm:bottom-5 sm:left-5 sm:right-5">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-sky">Learning together</p>
