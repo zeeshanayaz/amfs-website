@@ -15,6 +15,7 @@ import {
 import { CampusesSection } from '@/components/campuses-section'
 import { CtaSection } from '@/components/cta-section'
 import { CoreValuesSection } from '@/components/core-values-section'
+import { HomeAbout } from '@/components/home-about'
 
 const stats = [
   { value: '5', label: 'Karachi campuses', icon: MapPin },
@@ -22,12 +23,6 @@ const stats = [
   { value: '200+', label: 'Certified teachers', icon: BookOpen },
 ]
 
-const principles = [
-  { label: 'Knowledge', icon: BookOpen, color: 'bg-brand-sky/15 text-brand-royal' },
-  { label: 'Character', icon: HeartHandshake, color: 'bg-brand-gold/25 text-brand-navy' },
-  { label: 'Confidence', icon: TrendingUp, color: 'bg-brand-orange/15 text-brand-orange' },
-  { label: 'Care', icon: ShieldCheck, color: 'bg-brand-royal/15 text-brand-royal' },
-]
 
 const parentBenefits = [
   'Qualified teachers',
@@ -85,7 +80,7 @@ export function AboutPage() {
           <div className="relative mx-auto w-full max-w-2xl">
             <div aria-hidden="true" className="absolute -inset-4 rotate-2 rounded-[2rem] bg-brand-gold/25" />
             <div className="relative overflow-hidden rounded-[2rem] border-8 border-white bg-brand-navy shadow-2xl shadow-brand-navy/20">
-              <Image src="/images/about-classroom.png" alt="Students learning with a teacher in a bright classroom" width={1024} height={1024} className="aspect-[1.08] w-full object-cover" priority />
+              <Image src="/images/about-classroom.webp" alt="Students learning with a teacher in a bright classroom" width={1024} height={1024} className="aspect-[1.08] w-full object-cover" priority />
               <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-2xl border border-white/20 bg-brand-navy/90 p-4 text-white backdrop-blur-sm">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-gold">Our promise</p>
@@ -110,21 +105,7 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section id="our-story" aria-labelledby="story-heading" className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 sm:py-32 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
-        <div className="relative min-h-[430px]">
-          <div className="absolute left-0 top-0 w-[72%] overflow-hidden rounded-[2rem] border-8 border-white shadow-xl"><Image src="/images/about-learning.png" alt="Students collaborating around a table" width={1024} height={1024} className="aspect-[0.95] w-full object-cover" /></div>
-          <div className="absolute bottom-0 right-0 w-[58%] overflow-hidden rounded-[2rem] border-8 border-white shadow-xl"><Image src="/images/about-classroom.png" alt="Teacher supporting students during classroom learning" width={1024} height={1024} className="aspect-square w-full object-cover" /></div>
-          <div className="absolute bottom-10 left-4 rounded-2xl bg-brand-gold px-4 py-3 shadow-lg"><p className="text-xs font-bold uppercase tracking-wider text-brand-navy">Learn · Lead · Live well</p></div>
-        </div>
-        <div>
-          <SectionEyebrow>Our story</SectionEyebrow>
-          <h2 id="story-heading" className="mt-2 font-serif text-4xl font-semibold leading-tight text-brand-navy sm:text-5xl">Education with purpose at its heart.</h2>
-          <p className="mt-7 text-base leading-8 text-brand-dark-gray">We give children a strong beginning and a clear sense of possibility. Across our Karachi campuses, committed teachers and supportive families create a learning environment where academic progress and personal growth move together.</p>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {principles.map(({ label, icon: Icon, color }) => <div key={label} className="rounded-2xl border border-brand-border bg-white p-3 text-center"><span className={`mx-auto flex h-10 w-10 items-center justify-center rounded-xl ${color}`}><Icon className="h-5 w-5" /></span><p className="mt-2 text-xs font-semibold text-brand-navy">{label}</p></div>)}
-          </div>
-        </div>
-      </section>
+       <HomeAbout />
 
       <section aria-labelledby="vision-mission-heading" className="bg-white py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
