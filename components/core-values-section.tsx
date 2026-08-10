@@ -6,7 +6,7 @@ const accents = ['#3D63B8', '#37A9E8', '#F68A1F', '#243C7D', '#3D63B8', '#37A9E8
 
 export function CoreValuesSection() {
   return (
-    <section aria-labelledby="home-values-heading" className="bg-white py-20 sm:py-28">
+    <section id="core-values" aria-labelledby="home-values-heading" className="bg-white py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div><div className="mb-4 flex items-center gap-3"><span aria-hidden="true" className="h-px w-8 bg-brand-gold" /><span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-sky">What guides us</span></div><h2 id="home-values-heading" className="max-w-xl font-serif text-4xl font-bold leading-tight text-brand-navy text-balance sm:text-5xl">Small moments. Lasting values.</h2></div>
