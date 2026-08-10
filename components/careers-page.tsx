@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from "next/image";
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, MapPin, X } from 'lucide-react'
 import type { JobPost } from '@/lib/supabase/client'
 import { getActiveJobs, isSupabaseConfigured, isValidApplication, isValidEmail, submitJobApplication } from '@/lib/supabase/client'
@@ -109,17 +110,66 @@ export function CareersPage() {
             <div className="grid gap-4">
               {jobs.map((job) => (
                 <article key={job.id} className="group flex flex-col justify-between gap-6 rounded-3xl border border-brand-border bg-background p-6 transition hover:-translate-y-1 hover:border-brand-sky hover:shadow-lg sm:flex-row sm:items-center sm:p-8">
-                  <div>
-                    <div className="mb-3 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
-                      <span className="rounded-full bg-brand-light px-3 py-1 text-brand-royal">{job.department}</span>
-                      <span className="rounded-full bg-brand-gold/30 px-3 py-1 text-brand-navy">{job.employment_type}</span>
-                    </div>
-                    <h3 className="font-serif text-2xl font-bold text-brand-navy">{job.title}</h3>
-                    <p className="mt-3 text-sm font-semibold text-brand-dark-gray">{job.campus_name}</p>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-brand-dark-gray">{job.description}</p>
-                    <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-brand-royal"><MapPin className="size-4" />{job.location}</p>
+                  {/* Job Image */}
+                  <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
+                    {job.image_url ? (
+                      <Image
+                        src={job.image_url}
+                        alt={job.title}
+                        fill
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, 208px"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-brand-light">
+                        <span className="text-sm font-semibold text-brand-royal">
+                          Al Musleh Foundation School
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <button type="button" onClick={() => setSelectedJob(job)} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-brand-royal">Apply now <ArrowRight className="size-4 transition group-hover:translate-x-1" /></button>
+
+                  {/* Job Content */}
+                  <div className="flex min-w-0 flex-1 flex-col justify-center">
+                    <div className="mb-3 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
+                      <span className="rounded-full bg-brand-light px-3 py-1 text-brand-royal">
+                        {job.department}
+                      </span>
+
+                      <span className="rounded-full bg-brand-gold/30 px-3 py-1 text-brand-navy">
+                        {job.employment_type}
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif text-2xl font-bold text-brand-navy">
+                      {job.title}
+                    </h3>
+
+                    <p className="mt-3 text-sm font-semibold text-brand-dark-gray">
+                      {job.campus_name}
+                    </p>
+
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-brand-dark-gray">
+                      {job.description}
+                    </p>
+
+                    <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-brand-royal">
+                      <MapPin className="size-4" />
+                      {job.location}
+                    </p>
+                  </div>
+
+                  {/* Apply Button */}
+                  <div className="flex shrink-0 items-center sm:self-center">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedJob(job)}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-brand-royal sm:w-auto"
+                    >
+                      Apply now
+                      <ArrowRight className="size-4 transition group-hover:translate-x-1" />
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
