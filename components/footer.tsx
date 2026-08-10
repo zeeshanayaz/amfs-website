@@ -187,8 +187,10 @@ export function Footer() {
                   { label: 'About Us', href: '/about' },
                   { label: 'Our Campuses', href: '/#campuses' },
                   { label: 'Our Values', href: '/about#core-values' },
-                  { label: 'Contact Us', href: '/about#social-connect' },
-                  { label: 'Apply for Admission', href: '/#join-amfs' },
+                  { label: 'Apply for Admission', href: '/admissions' },
+                  { label: 'News & Events', href: '/news-events' },
+                  { label: 'Testimonials', href: '/testimonials' },
+                  { label: 'Contact Us', href: '/contact' },
                   { label: 'Careers', href: '/careers' },
                 ].map(({ label, href }) => (
                   <li key={label}>

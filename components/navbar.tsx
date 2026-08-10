@@ -6,9 +6,12 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/careers', label: 'Careers' },
+  { href: '/', label: 'Home', external: false },
+  { href: '/about', label: 'About', external: false },
+  { href: '/admissions', label: 'Admissions', external: false },
+  { href: '/news-events', label: 'News & Events', external: false },
+  { href: '/contact', label: 'Contact', external: false },
+  { href: '/careers', label: 'Careers', external: false },
   // { href: '/#campuses', label: 'Campuses' },
 ]
 

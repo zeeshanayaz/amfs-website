@@ -39,6 +39,43 @@ create table if not exists job_applications (
   created_at timestamp with time zone default now()
 );
 
+-- Public school content and contact inbox.
+create table if not exists news_events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text unique,
+  category text not null default 'News',
+  excerpt text not null,
+  body text not null,
+  image_url text,
+  event_date timestamp with time zone,
+  is_published boolean not null default false,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+create table if not exists contact_submissions (
+  id uuid primary key default gen_random_uuid(),
+  full_name text not null,
+  email text not null,
+  phone text,
+  subject text not null,
+  message text not null,
+  is_read boolean not null default false,
+  created_at timestamp with time zone default now()
+);
+
+create table if not exists testimonials (
+  id uuid primary key default gen_random_uuid(),
+  parent_name text not null,
+  student_name text not null,
+  thoughts text not null,
+  display_order integer not null default 0,
+  is_published boolean not null default false,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
 -- Enable row level security and policies for secure data access.
 alter table admin_users enable row level security;
 create policy "Allow authenticated admin to read own admin row" on admin_users for select using (auth.uid() = id);
