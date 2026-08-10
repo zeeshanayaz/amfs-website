@@ -8,6 +8,7 @@ import { CampusesSection } from '@/components/campuses-section'
 import { CtaSection } from '@/components/cta-section'
 import { Footer } from '@/components/footer'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { DiscoverVideoSection } from '@/components/discover-video-section'
 
 export const metadata: Metadata = {
   title: 'Al Musleh Foundation School — Nurturing Minds, Building Futures',
@@ -23,6 +24,7 @@ export default function HomePage() {
         <HomeHero />
         {/* <MarqueeBar /> */}
         <HomeAbout />
+        <DiscoverVideoSection />
         <CoreValuesSection />
         <CampusesSection />
         <CtaSection />
