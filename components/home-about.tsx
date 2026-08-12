@@ -14,10 +14,10 @@ export function HomeAbout() {
       <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 lg:px-8">
         <div className="relative min-h-[450px]">
           <div className="absolute left-0 top-10 h-[72%] w-[68%] overflow-hidden rounded-[2rem] border-8 border-white shadow-xl">
-            <Image src="/images/about-learning.webp" alt="A child engaged in creative learning at AMFS" fill className="object-cover" />
+            <Image src="/images/about-classroom.webp" alt="A child engaged in creative learning at AMFS" fill className="object-cover" />
           </div>
           <div className="absolute bottom-0 right-0 h-[62%] w-[62%] overflow-hidden rounded-[2rem] border-8 border-brand-navy shadow-xl">
-            <Image src="/images/about-classroom.webp" alt="An AMFS classroom filled with collaborative learning" fill className="object-cover" />
+            <Image src="/images/about-learning.webp" alt="An AMFS classroom filled with collaborative learning" fill className="object-cover" />
           </div>
           <div className="absolute left-1/2 top-0 flex h-20 w-20 -translate-x-1/2 items-center justify-center rounded-full bg-brand-gold shadow-lg">
             <BookOpen className="h-9 w-9 text-brand-navy" aria-hidden="true" />
