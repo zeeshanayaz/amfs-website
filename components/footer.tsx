@@ -25,6 +25,36 @@ const contactItems = [
 
 const socialLinks = [
   {
+    name: 'Linkedin',
+    url: 'https://www.linkedin.com/company/amfsedu/',
+    ariaLabel: 'Visit our LinkedIn page (opens in new tab)',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-4 h-4"
+        aria-hidden="true"
+      >
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.123 2.062 2.062 0 0 1 0 4.123zM3.555 9h3.558v11.452H3.555V9zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Twitter',
+    url: 'https://x.com/amfs_edu',
+    ariaLabel: 'Follow us on Twitter (opens in new tab)',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-4 h-4"
+        aria-hidden="true"
+      >
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.963 6.817H1.684l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 3.875H5.117L17.083 19.77Z" />
+      </svg>
+    ),
+  },
+  {
     name: 'Facebook',
     url: 'https://facebook.com/amfs.edu',
     ariaLabel: 'Visit our Facebook page (opens in new tab)',
