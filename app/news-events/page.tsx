@@ -47,8 +47,8 @@ export default function NewsEventsPage() {
 
         <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10">
           {loading ? (
-            <div className="rounded-3xl border border-brand-border bg-background p-16 text-center text-brand-dark-gray">
-              Loading news and events…
+            <div className="rounded-3xl border border-brand-border bg-background p-12 text-center">
+              <p className="font-semibold text-brand-navy">Loading…</p> 
             </div>
           ) : items.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-brand-border bg-background p-16 text-center">

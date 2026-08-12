@@ -267,7 +267,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <main className="grid min-h-screen place-items-center bg-brand-off-white text-brand-navy">
-        Loading dashboard�
+        <p className="font-semibold text-brand-navy">Loading…</p>
       </main>
     )
   }

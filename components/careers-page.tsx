@@ -99,7 +99,7 @@ export function CareersPage() {
           <div className="mb-10 flex flex-wrap items-end justify-between gap-5"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-brand-orange">Open positions</p><h2 className="font-serif text-4xl font-bold text-brand-navy sm:text-5xl">Find your place at AMFS.</h2></div><p className="max-w-sm text-sm leading-6 text-brand-dark-gray">Explore current opportunities across our academic, administrative, and support teams.</p></div>
           {loading ? (
             <div className="rounded-3xl border border-brand-border bg-background p-12 text-center">
-              <p className="font-semibold text-brand-navy">Loading open positions…</p>
+              <p className="font-semibold text-brand-navy">Loading…</p>
             </div>
           ) : jobs.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-brand-border bg-background p-12 text-center">
