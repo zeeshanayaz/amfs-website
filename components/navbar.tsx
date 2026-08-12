@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/', label: 'Home', external: false },
   { href: '/about', label: 'About', external: false },
   { href: '/admissions', label: 'Admissions', external: false },
+  { href: '#', label: 'Academic Calendar', external: false },
   { href: '/news-events', label: 'News & Events', external: false },
   { href: '/contact', label: 'Contact', external: false },
   { href: '/careers', label: 'Careers', external: false },
@@ -21,7 +22,7 @@ export function Navbar() {
   const pathname = usePathname()
 
   const normalizePath = (p?: string) => {
-    if (!p) return '/' 
+    if (!p) return '/'
     const trimmed = p.replace(/\/+$/g, '')
     return trimmed === '' ? '/' : trimmed
   }
@@ -53,20 +54,20 @@ export function Navbar() {
       style={
         scrolled
           ? {
-              background: 'rgba(255, 255, 255, 0.55)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-              borderBottom: '1px solid rgba(215, 222, 232, 0.5)',
-              boxShadow:
-                '0 4px 24px rgba(36, 60, 125, 0.08), 0 1.5px 0 rgba(246, 221, 36, 0.7)',
-            }
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            borderBottom: '1px solid rgba(215, 222, 232, 0.5)',
+            boxShadow:
+              '0 4px 24px rgba(36, 60, 125, 0.08), 0 1.5px 0 rgba(246, 221, 36, 0.7)',
+          }
           : {
-              background: 'rgba(255, 255, 255, 0.97)',
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
-              borderBottom: '1px solid #D7DEE8',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-            }
+            background: 'rgba(255, 255, 255, 0.97)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            borderBottom: '1px solid #D7DEE8',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+          }
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,12 +140,12 @@ export function Navbar() {
             </nav>
 
             {/* Apply Now CTA — desktop */}
-            <a
+            {/* <a
               href="/#join-amfs"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-brand-gold px-4 py-2 text-xs font-bold text-brand-navy shadow-sm shadow-brand-gold/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand-gold/25"
             >
               Apply Now
-            </a>
+            </a> */}
 
             {/* Mobile hamburger */}
             <button
@@ -178,7 +179,7 @@ export function Navbar() {
         aria-hidden={!mobileOpen}
         className={[
           'sm:hidden overflow-hidden transition-all duration-300 ease-in-out',
-          mobileOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0',
+          mobileOpen ? 'max-h-[calc(100vh-4.5rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0',
         ].join(' ')}
         style={{
           background: 'rgba(255,255,255,0.97)',
@@ -188,7 +189,7 @@ export function Navbar() {
       >
         <nav
           aria-label="Mobile navigation"
-          className="px-4 py-4 flex flex-col gap-1"
+          className="px-4 py-4 flex flex-col gap-1 pb-6"
         >
           {navLinks.map(({ href, label, external }) => {
             // Hash links are scroll anchors — never mark as active.
@@ -218,12 +219,12 @@ export function Navbar() {
             )
           })}
           {/* Apply Now in mobile */}
-          <a
+          {/* <a
             href="/#join-amfs"
             className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-brand-gold px-4 py-3 text-sm font-bold text-brand-navy"
           >
             Apply Now
-          </a>
+          </a> */}
         </nav>
       </div>
     </header>
