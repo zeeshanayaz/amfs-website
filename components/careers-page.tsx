@@ -87,9 +87,9 @@ export function CareersPage() {
       <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto grid max-w-7xl items-end gap-12 lg:grid-cols-[1fr_0.75fr]">
           <div>
-            <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-brand-gold">Work with purpose</p>
-            <h1 className="max-w-3xl font-serif text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-8xl">Help shape the <span className="text-brand-gold">next generation.</span></h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-white/75">At AMFS, every role has a meaningful place in a child’s journey. Join a caring team building confident learners and good citizens.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-gold">Work with purpose</p>
+            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-bold leading-tight sm:text-6xl">Help shape the <span className="text-brand-gold">next generation.</span></h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-brand-off-white/80">At AMFS, every role has a meaningful place in a child’s journey. Join a caring team building confident learners and good citizens.</p>
           </div>
           <div className="relative rounded-[2rem] bg-brand-royal p-7 sm:p-10"><div className="absolute -right-5 -top-5 size-20 rounded-full bg-brand-gold" /><BriefcaseBusiness className="relative mb-12 size-12 text-brand-gold" /><p className="relative max-w-xs font-serif text-2xl font-bold leading-tight">Bring your expertise, energy, and heart to school every day.</p></div>
         </div>

@@ -36,7 +36,7 @@ export default function TestimonialsPage() {
         <section className="bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10">
           <div className="mx-auto max-w-7xl">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-gold">Our community</p>
-            <h1 className="mt-5 font-serif text-5xl font-bold sm:text-6xl">What parents says about AMFS</h1>
+            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-bold leading-tight sm:text-6xl">What parents says about AMFS</h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-brand-off-white/80">Hear from families who have trusted Al Musleh Foundation School with their children’s growth.</p>
           </div>
         </section>
