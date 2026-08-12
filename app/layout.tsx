@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Al Musleh Foundation School — Coming Soon',
+    title: 'Al Musleh Foundation School — Nurturing Minds, Building Futures',
     description:
-      'Something amazing is coming. A brand new digital experience for Al Musleh Foundation School is on its way.',
+      'Al Musleh Foundation School offers quality education rooted in Islamic values and academic excellence across five campuses in Karachi.',
     siteName: 'Al Musleh Foundation School',
     locale: 'en_US',
     type: 'website',
