@@ -9,7 +9,7 @@ const navLinks = [
   { href: '/', label: 'Home', external: false },
   { href: '/about', label: 'About', external: false },
   { href: '/admissions', label: 'Admissions', external: false },
-  { href: '#', label: 'Academic Calendar', external: false },
+  { href: '/documents/academic-calendar.pdf', label: 'Academic Calendar', external: true },
   { href: '/news-events', label: 'News & Events', external: false },
   { href: '/contact', label: 'Contact', external: false },
   { href: '/careers', label: 'Careers', external: false },
