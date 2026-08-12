@@ -1,136 +1,77 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
-import { CalendarDays, X } from 'lucide-react'
 import type { NewsEvent } from '@/lib/school-content'
 
 type NewsEventsListProps = {
   items: NewsEvent[]
+  onItemSelect: (item: NewsEvent) => void
+  onImagePreview?: (image: { src: string; title: string }) => void
 }
 
-export function NewsEventsList({ items }: NewsEventsListProps) {
-  const [selected, setSelected] = useState<NewsEvent | null>(null)
-
+export function NewsEventsList({ items, onItemSelect, onImagePreview }: NewsEventsListProps) {
   return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <article key={item.id} className="group overflow-hidden rounded-3xl border border-brand-border bg-background shadow-sm transition hover:-translate-y-1 hover:border-brand-royal">
-            {item.image_url ? (
-              <div className="overflow-hidden">
-                <Image
-                  src={item.image_url}
-                  alt={item.title}
-                  width={800}
-                  height={480}
-                  className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
-                />
-              </div>
-            ) : null}
-
-            <div className="p-6">
-              <span className="inline-flex rounded-full bg-brand-light px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-royal">
-                {item.category}
-              </span>
-              <h2 className="mt-5 font-serif text-2xl font-bold text-brand-navy">{item.title}</h2>
-              {item.event_date ? (
-                <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-brand-orange">
-                  <CalendarDays className="size-4" />
-                  {new Date(item.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}
-                </p>
-              ) : null}
-              <p className="mt-4 text-sm leading-6 text-brand-dark-gray line-clamp-3">{item.excerpt}</p>
-              <div className="mt-6 flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={() => setSelected(item)}
-                  className="rounded-full bg-brand-navy px-4 py-3 text-sm font-bold text-primary-foreground transition hover:bg-brand-royal"
-                >
-                  View details
-                </button>
-                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-dark-gray">Read full story</span>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {selected ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand-navy/65 p-4" role="dialog" aria-modal="true" aria-labelledby="news-event-title">
-          <div className="flex h-full w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-background shadow-2xl sm:h-[96vh]">
-            <div className="flex items-start justify-between gap-4 border-b border-brand-border p-6">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-orange">{selected.category}</p>
-                <h2 id="news-event-title" className="mt-2 font-serif text-3xl font-bold text-brand-navy">{selected.title}</h2>
-                {selected.event_date ? (
-                  <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-brand-dark-gray">
-                    <CalendarDays className="size-4" />
-                    {new Date(selected.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}
-                  </p>
-                ) : null}
-              </div>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {items.map((item) => (
+        <article
+          key={item.id}
+          role="button"
+          tabIndex={0}
+          onClick={() => onItemSelect(item)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              onItemSelect(item)
+            }
+          }}
+          className="group text-left overflow-hidden rounded-3xl border border-brand-border bg-background shadow-sm transition hover:-translate-y-1 hover:border-brand-royal focus:outline-none focus:ring-2 focus:ring-brand-sky"
+        >
+          {item.image_url ? (
+            <div className="relative overflow-hidden">
+              <Image
+                src={item.image_url}
+                alt={item.title}
+                width={800}
+                height={480}
+                className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
+              />
               <button
                 type="button"
-                onClick={() => setSelected(null)}
-                aria-label="Close details"
-                className="rounded-full p-2 text-brand-dark-gray transition hover:bg-brand-light hover:text-brand-navy"
-              >
-                <X className="size-5" />
-              </button>
+                onClick={(event) => {
+                  event.stopPropagation()
+                  if (item.image_url) {
+                    onImagePreview?.({ src: item.image_url, title: item.title })
+                  }
+                }}
+                className="absolute inset-0 cursor-zoom-in bg-transparent"
+                aria-label={`Preview image for ${item.title}`}
+              />
             </div>
+          ) : null}
 
-            {selected.image_url ? (
-              <div className="max-h-[40vh] overflow-hidden bg-brand-off-white">
-                <Image
-                  src={selected.image_url}
-                  alt={selected.title}
-                  width={1200}
-                  height={700}
-                  className="w-full object-contain"
-                />
-              </div>
+          <div className="p-6">
+            <span className="inline-flex rounded-full bg-brand-light px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-royal">
+              {item.category}
+            </span>
+            <h2 className="mt-5 font-serif text-2xl font-bold text-brand-navy">{item.title}</h2>
+            {item.event_date ? (
+              <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-brand-orange">
+                <span className="inline-flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-brand-orange"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V9h14v11zm0-13H5V6h14v1z" fill="currentColor"/></svg>
+                  {new Date(item.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}
+                </span>
+              </p>
             ) : null}
-
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Type</p>
-                    <p className="mt-2 text-sm font-semibold text-brand-navy">{selected.category}</p>
-                  </div>
-                  {selected.event_date ? (
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Event date</p>
-                      <p className="mt-2 text-sm font-semibold text-brand-navy">{new Date(selected.event_date).toLocaleDateString('en-US', { dateStyle: 'long' })}</p>
-                    </div>
-                  ) : null}
-                </div>
-
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Summary</p>
-                  <p className="mt-2 text-sm leading-7 text-brand-dark-gray">{selected.excerpt}</p>
-                </div>
-
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-brand-dark-gray">Details</p>
-                  <p className="mt-2 whitespace-pre-line text-sm leading-7 text-brand-dark-gray">{selected.body}</p>
-                </div>
-              </div>
-
-              <div className="mt-8 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setSelected(null)}
-                  className="rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-brand-royal"
-                >
-                  Close
-                </button>
-              </div>
+            <p className="mt-4 text-sm leading-6 text-brand-dark-gray line-clamp-3">{item.excerpt}</p>
+            <div className="mt-6 flex items-center justify-between gap-4">
+              <span className="inline-flex rounded-full bg-brand-navy px-4 py-3 text-sm font-bold text-primary-foreground transition group-hover:bg-brand-royal">
+                View details
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-dark-gray">Read full story</span>
             </div>
           </div>
-        </div>
-      ) : null}
-    </>
+        </article>
+      ))}
+    </div>
   )
 }
