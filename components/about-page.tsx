@@ -67,13 +67,13 @@ export function AboutPage() {
             <p className="mt-7 max-w-xl text-base leading-8 text-brand-dark-gray sm:text-lg">
               Al Musleh Foundation School brings together thoughtful teaching, strong values, and a caring community to help young people learn with purpose.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="#our-story" className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-navy/15 transition hover:-translate-y-0.5 hover:shadow-xl">
-                Meet our story <ArrowRight className="h-4 w-4" />
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/#campuses" className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-navy/20 transition hover:-translate-y-0.5 hover:bg-brand-royal">
+                Explore campuses <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="#campuses" className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-white px-6 py-3.5 text-sm font-semibold text-brand-navy transition hover:-translate-y-0.5 hover:border-brand-sky">
-                Find a campus
-              </Link>
+              {/* <Link href="/about" className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-white px-6 py-3.5 text-sm font-semibold text-brand-navy transition hover:-translate-y-0.5 hover:border-brand-sky">
+                Meet AMFS
+              </Link> */}
             </div>
           </div>
 
@@ -105,7 +105,7 @@ export function AboutPage() {
         </div>
       </section>
 
-       <HomeAbout />
+      <HomeAbout />
 
       <section aria-labelledby="vision-mission-heading" className="bg-white py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
