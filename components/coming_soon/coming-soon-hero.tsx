@@ -51,11 +51,11 @@ function FanWatermark() {
   )
 }
 
-export function Hero() {
+export function ComingSoonHero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-brand-off-white min-h-[calc(100vh-72px)] flex flex-col"
+      className="relative overflow-hidden bg-brand-off-white min-h-screen flex flex-col"
     >
       {/* Decorative fan background — very subtle watermark */}
       <div aria-hidden="true" className="absolute inset-0 opacity-[0.035] pointer-events-none">

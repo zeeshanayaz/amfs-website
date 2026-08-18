@@ -1,21 +1,21 @@
 import type { Metadata } from 'next'
-import { CoreValuesSection } from '@/components/core-values-section'
 import { SocialConnect } from '@/components/social-connect'
 import { ScrollToTop } from '@/components/scroll-to-top'
-import { ComingSoonHero } from '@/components/coming_soon/coming-soon-hero'
+import { MaintenanceHero } from '@/components/maintenance/maintenance-hero'
+import { CoreValuesSection } from '@/components/core-values-section'
 
 export const metadata: Metadata = {
-  title: 'Coming Soon | Al Musleh Foundation School',
+  title: 'Maintenance | Al Musleh Foundation School',
   description:
-    'Al Musleh Foundation School\'s new website is coming soon. Stay connected on Facebook, Instagram, and YouTube for updates.',
+    'Al Musleh Foundation School\'s website is under maintenance. Please check back soon.',
 }
 
-export default function ComingSoonPage() {
+export default function MaintenancePage() {
   return (
     <>
       <main id="main-content">
         {/* Section 1: Under Maintenance Hero (Full Page Height) */}
-        <ComingSoonHero />
+        <MaintenanceHero />
         
         {/* Section 2: Values Section */}
         <CoreValuesSection bgColor='white' /> 
