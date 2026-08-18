@@ -49,6 +49,10 @@ export async function initializeRemoteConfig(): Promise<boolean> {
     initPromise = (async () => {
       const remoteConfig = getClientRemoteConfig()
 
+      if (!remoteConfig) {
+        return false
+      }
+
       try {
         const activated = await fetchAndActivate(remoteConfig)
         const pageMode = getValue(

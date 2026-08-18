@@ -12,13 +12,30 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length > 0 ? getApps()[0]! : initializeApp(firebaseConfig)
+const hasRequiredConfig = Boolean(
+  firebaseConfig.apiKey &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId &&
+    firebaseConfig.appId,
+)
+
+// Firebase is optional for local previews. Never initialize the SDK with an
+// incomplete config because it throws during module evaluation.
+const app = hasRequiredConfig
+  ? getApps().length > 0
+    ? getApps()[0]!
+    : initializeApp(firebaseConfig)
+  : undefined
 
 let analytics: ReturnType<typeof getAnalytics> | undefined
 let remoteConfigInstance: RemoteConfig | null = null
 
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app)
+if (typeof window !== 'undefined' && app) {
+  try {
+    analytics = getAnalytics(app)
+  } catch (error) {
+    console.warn('[Firebase] Analytics unavailable:', error)
+  }
 }
 
 export const REMOTE_CONFIG_DEFAULTS: Record<string, string | number | boolean> = {
@@ -35,9 +52,9 @@ export const REMOTE_CONFIG_DEFAULTS: Record<string, string | number | boolean> =
   content_cta_text: 'Learn More',
 }
 
-export function getClientRemoteConfig(): RemoteConfig {
-  if (typeof window === 'undefined') {
-    throw new Error('Remote Config is only available in the browser')
+export function getClientRemoteConfig(): RemoteConfig | null {
+  if (typeof window === 'undefined' || !app) {
+    return null
   }
 
   if (!remoteConfigInstance) {
