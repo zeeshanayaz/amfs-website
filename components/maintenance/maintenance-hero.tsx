@@ -99,10 +99,10 @@ export function MaintenanceHero() {
           id="hero-heading"
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] leading-tight text-balance mb-4"
         >
-          <span className="block font-normal text-brand-navy">
+          <span className="block font-normal text-brand-navy mb-4">
             Site Under
           </span>
-          <span className="block font-bold text-brand-navy">
+          <span className="block font-bold text-brand-navy animate-bounce [animation-duration:3s]">
             Maintenance
           </span>
         </h1>

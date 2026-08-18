@@ -99,10 +99,10 @@ export function ComingSoonHero() {
           id="hero-heading"
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] leading-tight text-balance mb-4"
         >
-          <span className="block font-normal text-brand-navy">
+          <span className="block font-normal text-brand-navy mb-4">
             Something Amazing is
           </span>
-          <span className="block font-bold text-brand-navy">
+          <span className="block font-bold text-brand-navy animate-bounce [animation-duration:3s]">
             Coming Soon
           </span>
         </h1>
