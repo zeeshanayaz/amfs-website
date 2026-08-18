@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "name": "Target App",
+      "expression": "app.id == '1:34904585570:web:a5a0851075e68fba04683b'",
+      "tagColor": "GREEN"
+    }
+  ],
+  "parameters": {
+    "app_root_page_mode": {
+      "defaultValue": {
+        "value": "maintenance"
+      },
+      "conditionalValues": {
+        "Target App": {
+          "rolloutValue": {
+            "rolloutId": "rollout_1",
+            "value": "maintenance",
+            "percent": 100
+          }
+        }
+      },
+      "description": "'maintenance' | 'coming_soon' | 'home'",
+      "valueType": "STRING"
+    }
+  }
+}

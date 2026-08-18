@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display, Merriweather } from 'next/font/google'
+import { FirebaseProvider } from '@/lib/firebase/provider'
 import './globals.css'
 
 const inter = Inter({
@@ -24,7 +25,7 @@ const merriweather = Merriweather({
 })
 
 export const metadata: Metadata = {
-  title: 'Al Musleh Foundation School — Nurturing Minds, Building Futures',
+  title: 'Al Musleh Foundation School - Nurturing Minds, Building Futures',
   description:
     'Al Musleh Foundation School offers quality education rooted in Islamic values and academic excellence across five campuses in Karachi.',
   keywords: [
@@ -83,7 +84,9 @@ export default function RootLayout({
       className={`light bg-background ${inter.variable} ${playfair.variable} ${merriweather.variable}`}
       data-scroll-behavior="smooth"
     >
-      <body className="antialiased font-sans">{children}</body>
+      <body className="antialiased font-sans">
+        <FirebaseProvider>{children}</FirebaseProvider>
+      </body>
     </html>
   )
 }
