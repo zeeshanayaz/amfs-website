@@ -18,8 +18,8 @@ const contactItems = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'almusleh.foundation@gmail.com',
-    href: 'mailto:almusleh.foundation@gmail.com',
+    value: 'contact@amfs.edu.pk',
+    href: 'mailto:contact@amfs.edu.pk',
   },
 ]
 
