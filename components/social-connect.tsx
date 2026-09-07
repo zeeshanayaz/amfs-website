@@ -15,7 +15,7 @@ const platforms: SocialPlatform[] = [
     id: 'facebook',
     name: 'Facebook',
     handle: 'amfs.edu',
-    url: 'https://facebook.com/amfs.edu',
+    url: 'https://facebook.com/amfs.edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Follow Al Musleh Foundation School on Facebook (opens in new tab)',
     icon: (
       <svg
@@ -33,7 +33,7 @@ const platforms: SocialPlatform[] = [
     id: 'instagram',
     name: 'Instagram',
     handle: '@amfs_edu',
-    url: 'https://instagram.com/amfs_edu',
+    url: 'https://instagram.com/amfs_edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Follow Al Musleh Foundation School on Instagram (opens in new tab)',
     icon: (
       <svg
@@ -51,7 +51,7 @@ const platforms: SocialPlatform[] = [
     id: 'youtube',
     name: 'YouTube',
     handle: '@amfs_edu',
-    url: 'https://youtube.com/@amfs_edu',
+    url: 'https://youtube.com/@amfs_edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Subscribe to Al Musleh Foundation School on YouTube (opens in new tab)',
     icon: (
       <svg

@@ -26,7 +26,7 @@ const contactItems = [
 const socialLinks = [
   {
     name: 'Linkedin',
-    url: 'https://www.linkedin.com/company/amfsedu/',
+    url: 'https://www.linkedin.com/company/amfsedu/?utm_source=amfs.edu.pk',
     ariaLabel: 'Visit our LinkedIn page (opens in new tab)',
     icon: (
       <svg
@@ -41,7 +41,7 @@ const socialLinks = [
   },
   {
     name: 'Twitter',
-    url: 'https://x.com/amfs_edu',
+    url: 'https://x.com/amfs_edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Follow us on Twitter (opens in new tab)',
     icon: (
       <svg
@@ -56,7 +56,7 @@ const socialLinks = [
   },
   {
     name: 'Facebook',
-    url: 'https://facebook.com/amfs.edu',
+    url: 'https://facebook.com/amfs.edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Visit our Facebook page (opens in new tab)',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
@@ -66,7 +66,7 @@ const socialLinks = [
   },
   {
     name: 'Instagram',
-    url: 'https://instagram.com/amfs_edu',
+    url: 'https://instagram.com/amfs_edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Follow us on Instagram (opens in new tab)',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
@@ -76,7 +76,7 @@ const socialLinks = [
   },
   {
     name: 'YouTube',
-    url: 'https://youtube.com/@amfs_edu',
+    url: 'https://youtube.com/@amfs_edu?utm_source=amfs.edu.pk',
     ariaLabel: 'Subscribe on YouTube (opens in new tab)',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
