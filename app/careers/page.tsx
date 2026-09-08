@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { CareersPage } from '@/components/careers-page'
+import { ScrollToTop } from '@/components/scroll-to-top'
 
 export const metadata: Metadata = {
   title: 'Careers | Al Musleh Foundation School',
@@ -16,6 +17,7 @@ export default function CareersRoute() {
         <CareersPage />
       </main>
       <Footer />
+      <ScrollToTop />
     </>
   )
 }

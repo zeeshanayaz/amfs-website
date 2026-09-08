@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import type { Testimonial } from '@/lib/school-content'
 import { PageHeading } from '@/components/ui/page-heading'
+import { ScrollToTop } from '@/components/scroll-to-top'
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
@@ -66,6 +67,7 @@ export default function TestimonialsPage() {
         </section>
       </main>
       <Footer />
+      <ScrollToTop />
     </>
   )
 }

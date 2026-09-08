@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, FileText, GraduationCap, ShieldCheck } from '
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import { PageHeading } from '@/components/ui/page-heading'
+import { ScrollToTop } from '@/components/scroll-to-top'
 
 const steps = [
     { title: 'Explore the school', text: 'Learn about our early years, primary learning approach, and nurturing school community.' },
@@ -44,6 +45,7 @@ export default function AdmissionsPage() {
                 <section className="border-y border-brand-border bg-background px-6 py-20 sm:px-10"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">What to prepare</p><h2 className="mt-3 font-serif text-4xl font-bold">Admission requirements</h2><p className="mt-4 max-w-xl leading-7 text-brand-dark-gray">Gather these documents to help our admissions team process your inquiry smoothly.</p><ul className="mt-8 grid gap-4">{requirements.map((item) => <li key={item} className="flex gap-3 text-sm leading-6"><FileText className="mt-0.5 size-5 shrink-0 text-brand-royal" />{item}</li>)}</ul></div><div className="rounded-3xl bg-brand-light p-8"><ShieldCheck className="size-9 text-brand-royal" /><h3 className="mt-6 font-serif text-2xl font-bold">Have a question?</h3><p className="mt-3 leading-7 text-brand-dark-gray">Every family’s situation is unique. Reach out to us and we’ll help you understand the right next step.</p><Link href="/contact" className="mt-7 inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground">Contact the school <ArrowRight className="size-4" /></Link></div></div></section>
             </main>
             <Footer />
+            <ScrollToTop />
         </>
     )
 }

@@ -10,6 +10,7 @@ import { Navbar } from '@/components/navbar'
 import { PageHeading } from '@/components/ui/page-heading'
 import { Newspaper } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { ScrollToTop } from '@/components/scroll-to-top'
 
 export default function NewsEventsPage() {
   const [items, setItems] = useState<NewsEvent[]>([])
@@ -148,6 +149,7 @@ export default function NewsEventsPage() {
       </Lightbox>
 
       <Footer />
+      <ScrollToTop />
     </>
   )
 }
