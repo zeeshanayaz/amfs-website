@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Image from "next/image";
-import { ArrowRight, BriefcaseBusiness, CheckCircle2, MapPin, X } from 'lucide-react'
+import { ArrowRight, CheckCircle2, MapPin, X } from 'lucide-react'
 import type { JobPost } from '@/lib/supabase/client'
 import { getActiveJobs, isSupabaseConfigured, isValidApplication, isValidEmail, submitJobApplication } from '@/lib/supabase/client'
 import { PageHeading } from './ui/page-heading';
+import { Lightbox } from '@/components/ui/lightbox'
 
 type ApplicationFormProps = { job: JobPost; onClose: () => void }
 
@@ -67,6 +68,7 @@ export function CareersPage() {
   const [jobs, setJobs] = useState<JobPost[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
+  const [previewImage, setPreviewImage] = useState<{ src: string; title: string } | null>(null)
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -91,16 +93,6 @@ export function CareersPage() {
         description="At AMFS, every role has a meaningful place in a child’s journey. Join a caring team building confident learners and good citizens."
       />
 
-      {/* <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10 lg:px-16 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-end gap-12 lg:grid-cols-[1fr_0.75fr]">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-gold">Work with purpose</p>
-            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-bold leading-tight sm:text-6xl">Help shape the <span className="text-brand-gold">next generation.</span></h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-brand-off-white/80">At AMFS, every role has a meaningful place in a child’s journey. Join a caring team building confident learners and good citizens.</p>
-          </div>
-          <div className="relative rounded-[2rem] bg-brand-royal p-7 sm:p-10"><div className="absolute -right-5 -top-5 size-20 rounded-full bg-brand-gold" /><BriefcaseBusiness className="relative mb-12 size-12 text-brand-gold" /><p className="relative max-w-xs font-serif text-2xl font-bold leading-tight">Bring your expertise, energy, and heart to school every day.</p></div>
-        </div>
-      </section> */}
       <section className="bg-brand-off-white px-6 py-16 sm:px-10 lg:px-16 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-5"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-brand-orange">Open positions</p><h2 className="font-serif text-4xl font-bold text-brand-navy sm:text-5xl">Find your place at AMFS.</h2></div><p className="max-w-sm text-sm leading-6 text-brand-dark-gray">Explore current opportunities across our academic, administrative, and support teams.</p></div>
@@ -120,13 +112,32 @@ export function CareersPage() {
                   {/* Job Image */}
                   <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
                     {job.image_url ? (
-                      <Image
-                        src={job.image_url}
-                        alt={job.title}
-                        fill
-                        className="object-cover transition duration-500 group-hover:scale-105"
-                        sizes="(max-width: 640px) 100vw, 208px"
-                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPreviewImage({
+                            src: job.image_url!,
+                            title: job.title,
+                          })
+                        }
+                        className="group absolute inset-0 h-full w-full cursor-zoom-in"
+                        aria-label={`Preview ${job.title} image`}
+                      >
+                        <Image
+                          src={job.image_url}
+                          alt={job.title}
+                          fill
+                          className="object-cover transition duration-500 group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, 208px"
+                        />
+
+                        {/* Optional visual indication */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-brand-navy/0 transition group-hover:bg-brand-navy/20">
+                          <span className="rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-brand-navy opacity-0 shadow-md transition group-hover:opacity-100">
+                            View image
+                          </span>
+                        </div>
+                      </button>
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-brand-light">
                         <span className="text-sm font-semibold text-brand-royal">
@@ -184,6 +195,21 @@ export function CareersPage() {
         </div>
       </section>
       {selectedJob && <ApplicationForm job={selectedJob} onClose={() => setSelectedJob(null)} />}
+      <Lightbox
+        open={Boolean(previewImage)}
+        title={previewImage?.title}
+        onClose={() => setPreviewImage(null)}
+      >
+        {previewImage ? (
+          <Image
+            src={previewImage.src}
+            alt={previewImage.title}
+            width={1600}
+            height={1200}
+            className="h-[75vh] w-full object-contain"
+          />
+        ) : null}
+      </Lightbox>
     </>
   )
 }
