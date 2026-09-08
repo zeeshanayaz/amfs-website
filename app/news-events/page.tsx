@@ -1,5 +1,6 @@
 'use client'
 
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import { NewsEventsList } from '@/components/news-events-list'
 import { Lightbox } from '@/components/ui/lightbox'
@@ -11,6 +12,11 @@ import { PageHeading } from '@/components/ui/page-heading'
 import { Newspaper } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { ScrollToTop } from '@/components/scroll-to-top'
+
+export const metadata: Metadata = {
+  title: 'News & Events | Al Musleh Foundation School',
+  description: 'Stay updated with the latest news and events from Al Musleh Foundation School across our five Karachi campuses.',
+}
 
 export default function NewsEventsPage() {
   const [items, setItems] = useState<NewsEvent[]>([])

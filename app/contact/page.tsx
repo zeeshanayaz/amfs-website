@@ -1,5 +1,6 @@
 'use client'
 
+import type { Metadata } from 'next'
 import { FormEvent, useState } from 'react'
 import { Mail, MapPin, Phone, Send } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -7,6 +8,11 @@ import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import { PageHeading } from '@/components/ui/page-heading'
 import { ScrollToTop } from '@/components/scroll-to-top'
+
+export const metadata: Metadata = {
+  title: 'Contact Us | Al Musleh Foundation School',
+  description: 'Get in touch with Al Musleh Foundation School across our five Karachi campuses.',
+}
 
 export default function ContactPage() {
     const [form, setForm] = useState({ full_name: '', email: '', phone: '', subject: '', message: '' })
