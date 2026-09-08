@@ -1,9 +1,15 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, FileText, GraduationCap, ShieldCheck } from 'lucide-react'
+import { ArrowRight, FileText, ShieldCheck } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import { PageHeading } from '@/components/ui/page-heading'
 import { ScrollToTop } from '@/components/scroll-to-top'
+
+export const metadata: Metadata = {
+  title: 'Admissions | Al Musleh Foundation School',
+  description: 'Learn about the admissions process at Al Musleh Foundation School and how to get your child started on their educational journey.',
+}
 
 const steps = [
     { title: 'Explore the school', text: 'Learn about our early years, primary learning approach, and nurturing school community.' },
