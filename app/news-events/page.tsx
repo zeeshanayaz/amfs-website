@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { NewsEvent } from '@/lib/school-content'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
+import { PageHeading } from '@/components/ui/page-heading'
 import { Newspaper } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -46,16 +47,12 @@ export default function NewsEventsPage() {
       <Navbar />
 
       <main className="bg-brand-off-white text-brand-navy">
-        <section className="bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10">
-          <div className="mx-auto max-w-7xl">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-gold">Stay connected</p>
-            <h1 className="mt-5 font-serif text-5xl font-bold sm:text-6xl">News & Events</h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-brand-off-white/80">
-              The latest announcements, school moments, and upcoming events from our community.
-            </p>
-          </div>
-        </section>
-
+        <PageHeading
+          eyebrow="Stay connected"
+          title="News & Events"
+          description="The latest announcements, school moments, and upcoming events from our community."
+        />
+        
         {selectedItem ? (
           <section ref={detailRef} className="mx-auto max-w-7xl px-6 py-12 sm:px-10">
             <article className="overflow-hidden rounded-[28px] border border-brand-border bg-white shadow-sm">

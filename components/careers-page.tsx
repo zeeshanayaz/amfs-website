@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, MapPin, X } from 'lucide-react'
 import type { JobPost } from '@/lib/supabase/client'
 import { getActiveJobs, isSupabaseConfigured, isValidApplication, isValidEmail, submitJobApplication } from '@/lib/supabase/client'
+import { PageHeading } from './ui/page-heading';
 
 type ApplicationFormProps = { job: JobPost; onClose: () => void }
 
@@ -84,7 +85,13 @@ export function CareersPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10 lg:px-16 lg:py-28">
+      <PageHeading
+        eyebrow="Work with purpose"
+        title="Help shape the next generation."
+        description="At AMFS, every role has a meaningful place in a child’s journey. Join a caring team building confident learners and good citizens."
+      />
+
+      {/* <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-primary-foreground sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto grid max-w-7xl items-end gap-12 lg:grid-cols-[1fr_0.75fr]">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-gold">Work with purpose</p>
@@ -93,7 +100,7 @@ export function CareersPage() {
           </div>
           <div className="relative rounded-[2rem] bg-brand-royal p-7 sm:p-10"><div className="absolute -right-5 -top-5 size-20 rounded-full bg-brand-gold" /><BriefcaseBusiness className="relative mb-12 size-12 text-brand-gold" /><p className="relative max-w-xs font-serif text-2xl font-bold leading-tight">Bring your expertise, energy, and heart to school every day.</p></div>
         </div>
-      </section>
+      </section> */}
       <section className="bg-brand-off-white px-6 py-16 sm:px-10 lg:px-16 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-5"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-brand-orange">Open positions</p><h2 className="font-serif text-4xl font-bold text-brand-navy sm:text-5xl">Find your place at AMFS.</h2></div><p className="max-w-sm text-sm leading-6 text-brand-dark-gray">Explore current opportunities across our academic, administrative, and support teams.</p></div>
