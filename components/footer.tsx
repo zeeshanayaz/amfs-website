@@ -94,7 +94,7 @@ export function Footer() {
 
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
 
           {/* Column 1: Brand */}
           <div className="flex flex-col gap-5">
@@ -220,8 +220,39 @@ export function Footer() {
                   { label: 'Apply for Admission', href: '/admissions' },
                   { label: 'News & Events', href: '/news-events' },
                   { label: 'Testimonials', href: '/testimonials' },
-                  { label: 'Contact Us', href: '/contact' },
                   { label: 'Careers', href: '/careers' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="flex items-center gap-2.5 text-white/70 hover:text-white text-sm transition-colors duration-150"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="w-1 h-1 rounded-full bg-brand-gold flex-shrink-0"
+                      />
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+          
+          {/* Column 4: Support Links */}
+          <div>
+            <h3 className="font-serif font-semibold text-white text-base mb-5 flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="w-5 h-0.5 bg-brand-gold rounded-full"
+              />
+              Support
+            </h3>
+            <nav aria-label="Footer navigation">
+              <ul className="space-y-2.5">
+                {[
+                  { label: 'Contact Us', href: '/contact' },
+                  { label: 'Privacy Policy', href: '/privacy-policy' },
                 ].map(({ label, href }) => (
                   <li key={label}>
                     <a
