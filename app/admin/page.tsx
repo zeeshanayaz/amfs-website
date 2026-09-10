@@ -17,6 +17,7 @@ export default function AdminPage() {
       onEdit={admin.editJob}
       onRemove={admin.removeJob}
       onToggle={admin.toggleJob}
+      onFetchApplications={admin.fetchJobApplications}
       onFormChange={admin.setJobForm}
       onSave={admin.saveJob}
       onCloseForm={admin.closeJobForm}

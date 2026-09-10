@@ -7,6 +7,7 @@ import type {
   ContactSubmission,
   FormState,
   Job,
+  JobApplication,
   NewsEvent,
   NewsFormState,
   Testimonial,
@@ -34,6 +35,7 @@ type AdminContextValue = {
   saveJob: (event: FormEvent<HTMLFormElement>) => void
   removeJob: (id: string) => void
   toggleJob: (job: Job) => void
+  fetchJobApplications: (jobId: string) => Promise<JobApplication[]>
   openNewsEditor: () => void
   editNews: (item: NewsEvent) => void
   closeContentEditor: () => void
@@ -136,6 +138,17 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await createClient().from('job_posts').update({ is_active: !job.is_active }).eq('id', job.id); await load()
   }
 
+  async function fetchJobApplications(jobId: string) {
+    const { data, error } = await createClient()
+      .from('job_applications')
+      .select('*')
+      .eq('job_id', jobId)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return (data ?? []) as JobApplication[]
+  }
+
   function openNewsEditor() {
     setEditingContent('new'); setNewsFormState({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setMessage('')
   }
@@ -207,7 +220,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await createClient().auth.signOut(); router.replace('/admin/login')
   }
 
-  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => setShowJobForm(false), setJobForm, saveJob, removeJob, toggleJob, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
+  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => setShowJobForm(false), setJobForm, saveJob, removeJob, toggleJob, fetchJobApplications, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
 }
 
 export function useAdmin() {

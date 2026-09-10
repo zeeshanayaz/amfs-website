@@ -14,6 +14,17 @@ export type Job = {
   is_active: boolean
 }
 
+export type JobApplication = {
+  id: string
+  job_id: string | null
+  full_name: string
+  email: string
+  phone: string
+  cover_letter: string
+  resume_url: string | null
+  created_at: string
+}
+
 export type NewsEvent = {
   id: string
   title: string
