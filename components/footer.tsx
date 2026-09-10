@@ -7,7 +7,7 @@ const contactItems = [
     icon: MapPin,
     label: 'Head Campus — Muslehuddin Campus',
     value: 'MR1/38, Suleman Street\nMithadar, Karachi',
-    href: undefined,
+    href: "https://maps.app.goo.gl/utv1wgFmSg3McYPy6",
   },
   {
     icon: Phone,
@@ -186,6 +186,7 @@ export function Footer() {
                     {href ? (
                       <a
                         href={href}
+                        target={href.includes('http') ? '_blank' : undefined}
                         className="text-white/80 hover:text-white text-sm leading-snug transition-colors duration-150 focus-visible:outline-none focus-visible:underline"
                       >
                         {value}
