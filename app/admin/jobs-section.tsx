@@ -68,9 +68,8 @@ export function JobsSection({
                 <div>
                   <div className="mb-2 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
                     <span
-                      className={`rounded-full px-3 py-1 ${
-                        job.is_active ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'
-                      }`}
+                      className={`rounded-full px-3 py-1 ${job.is_active ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'
+                        }`}
                     >
                       {job.is_active ? 'Active' : 'Inactive'}
                     </span>
@@ -83,13 +82,6 @@ export function JobsSection({
                 <div className="flex shrink-0 items-start gap-2">
                   <button
                     type="button"
-                    onClick={() => onToggle(job)}
-                    className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold"
-                  >
-                    {job.is_active ? 'Deactivate' : 'Activate'}
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => onEdit(job)}
                     aria-label={`Edit ${job.title}`}
                     className="rounded-full border border-brand-border p-2 hover:bg-brand-light"
@@ -98,12 +90,19 @@ export function JobsSection({
                   </button>
                   <button
                     type="button"
+                    onClick={() => onToggle(job)}
+                    className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold"
+                  >
+                    {job.is_active ? 'Deactivate' : 'Activate'}
+                  </button>
+                  {/* <button
+                    type="button"
                     onClick={() => onRemove(job.id)}
                     aria-label={`Delete ${job.title}`}
                     className="rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="size-4" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </article>

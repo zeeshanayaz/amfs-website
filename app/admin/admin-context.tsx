@@ -35,10 +35,12 @@ type AdminContextValue = {
   removeJob: (id: string) => void
   toggleJob: (job: Job) => void
   openNewsEditor: () => void
+  editNews: (item: NewsEvent) => void
   closeContentEditor: () => void
   setNewsForm: (form: NewsFormState) => void
   saveNews: (event: FormEvent<HTMLFormElement>) => void
   openTestimonialEditor: () => void
+  editTestimonial: (item: Testimonial) => void
   setTestimonialForm: (form: TestimonialFormState) => void
   saveTestimonial: (event: FormEvent<HTMLFormElement>) => void
   toggleContent: (table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) => void
@@ -138,6 +140,19 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     setEditingContent('new'); setNewsFormState({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setMessage('')
   }
 
+  function editNews(item: NewsEvent) {
+    setEditingContent(item.id)
+    setNewsFormState({
+      title: item.title,
+      category: item.category,
+      excerpt: item.excerpt,
+      body: item.body,
+      image_url: item.image_url ?? '',
+      event_date: item.event_date ? item.event_date.slice(0, 10) : '',
+    })
+    setMessage('')
+  }
+
   async function saveNews(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setMessage('')
     const payload = { ...newsForm, image_url: newsForm.image_url || null, event_date: newsForm.event_date ? new Date(`${newsForm.event_date}T12:00:00`).toISOString() : null }
@@ -151,6 +166,17 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   function openTestimonialEditor() {
     setEditingContent('new'); setTestimonialFormState({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }); setMessage('')
+  }
+
+  function editTestimonial(item: Testimonial) {
+    setEditingContent(item.id)
+    setTestimonialFormState({
+      parent_name: item.parent_name,
+      student_name: item.student_name,
+      thoughts: item.thoughts,
+      display_order: item.display_order,
+    })
+    setMessage('')
   }
 
   async function saveTestimonial(event: FormEvent<HTMLFormElement>) {
@@ -181,7 +207,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await createClient().auth.signOut(); router.replace('/admin/login')
   }
 
-  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => setShowJobForm(false), setJobForm, saveJob, removeJob, toggleJob, openNewsEditor, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
+  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => setShowJobForm(false), setJobForm, saveJob, removeJob, toggleJob, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
 }
 
 export function useAdmin() {

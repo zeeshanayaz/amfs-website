@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent } from 'react'
-import { Plus, Trash2, X } from 'lucide-react'
+import { Pencil, Plus, Trash2, X } from 'lucide-react'
 import type { Testimonial, TestimonialFormState } from './types'
 
 type TestimonialsSectionProps = {
@@ -10,6 +10,7 @@ type TestimonialsSectionProps = {
   testimonialForm: TestimonialFormState
   message: string
   onOpenEditor: () => void
+  onEdit: (item: Testimonial) => void
   onCloseEditor: () => void
   onTestimonialFormChange: (form: TestimonialFormState) => void
   onSaveTestimonial: (event: FormEvent<HTMLFormElement>) => void
@@ -23,6 +24,7 @@ export function TestimonialsSection({
   testimonialForm,
   message,
   onOpenEditor,
+  onEdit,
   onCloseEditor,
   onTestimonialFormChange,
   onSaveTestimonial,
@@ -73,18 +75,26 @@ export function TestimonialsSection({
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    onClick={() => onEdit(item)}
+                    aria-label={`Edit testimonial from ${item.parent_name}`}
+                    className="rounded-full border border-brand-border p-2 hover:bg-brand-light"
+                  >
+                    <Pencil className="size-4" />
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => onTogglePublish(item)}
                     className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold"
                   >
                     {item.is_published ? 'Unpublish' : 'Publish'}
                   </button>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => onRemove(item.id)}
                     className="rounded-full border border-brand-border p-2 text-destructive"
                   >
                     <Trash2 className="size-4" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </article>

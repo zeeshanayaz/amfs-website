@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent } from 'react'
-import { Plus, Trash2, X } from 'lucide-react'
+import { Pencil, Plus, Trash2, X } from 'lucide-react'
 import type { NewsEvent, NewsFormState } from './types'
 
 type NewsSectionProps = {
@@ -10,6 +10,7 @@ type NewsSectionProps = {
   newsForm: NewsFormState
   message: string
   onOpenEditor: () => void
+  onEdit: (item: NewsEvent) => void
   onCloseEditor: () => void
   onNewsFormChange: (form: NewsFormState) => void
   onSaveNews: (event: FormEvent<HTMLFormElement>) => void
@@ -23,6 +24,7 @@ export function NewsSection({
   newsForm,
   message,
   onOpenEditor,
+  onEdit,
   onCloseEditor,
   onNewsFormChange,
   onSaveNews,
@@ -74,18 +76,26 @@ export function NewsSection({
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    onClick={() => onEdit(item)}
+                    aria-label={`Edit ${item.title}`}
+                    className="rounded-full border border-brand-border p-2 hover:bg-brand-light"
+                  >
+                    <Pencil className="size-4" />
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => onTogglePublish(item)}
                     className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold"
                   >
                     {item.is_published ? 'Unpublish' : 'Publish'}
                   </button>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => onRemove(item.id)}
                     className="rounded-full border border-brand-border p-2 text-destructive"
                   >
                     <Trash2 className="size-4" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </article>
