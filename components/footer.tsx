@@ -215,11 +215,12 @@ export function Footer() {
                 {[
                   { label: 'Home', href: '/' },
                   { label: 'About Us', href: '/about' },
-                  { label: 'Our Campuses', href: '/#campuses' },
+                  { label: 'Our Campuses', href: '/about#campuses' },
                   { label: 'Our Values', href: '/about#core-values' },
                   { label: 'Apply for Admission', href: '/admissions' },
                   { label: 'News & Events', href: '/news-events' },
                   { label: 'Testimonials', href: '/testimonials' },
+                  { label: 'Alumini', href: '/alumini' },
                   { label: 'Careers', href: '/careers' },
                 ].map(({ label, href }) => (
                   <li key={label}>
