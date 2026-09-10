@@ -25,6 +25,9 @@ type AdminContextValue = {
   showJobForm: boolean
   editingJob: string | null
   jobForm: FormState
+  setJobImageFile: (file: File | null) => void
+  jobSaving: boolean
+  jobToast: { type: 'success' | 'error'; message: string } | null
   editingContent: string | null
   newsForm: NewsFormState
   testimonialForm: TestimonialFormState
@@ -64,6 +67,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [showJobForm, setShowJobForm] = useState(false)
   const [editingJob, setEditingJob] = useState<string | null>(null)
   const [jobForm, setJobForm] = useState<FormState>(emptyForm)
+  const [jobImageFile, setJobImageFile] = useState<File | null>(null)
+  const [jobSaving, setJobSaving] = useState(false)
+  const [jobToast, setJobToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
   const [editingContent, setEditingContent] = useState<string | null>(null)
   const [newsForm, setNewsFormState] = useState<NewsFormState>({
     title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '',
@@ -111,22 +117,60 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { void load() }, [])
 
   function openNewJob() {
-    setEditingJob(null); setJobForm(emptyForm); setShowJobForm(true); setMessage('')
+    setEditingJob(null); setJobForm(emptyForm); setJobImageFile(null); setJobToast(null); setShowJobForm(true); setMessage('')
   }
 
   function editJob(job: Job) {
     setEditingJob(job.id)
+    setJobImageFile(null)
+    setJobToast(null)
     setJobForm({ ...job, image_url: job.image_url ?? '', expires_at: job.expires_at ? job.expires_at.slice(0, 10) : '' })
     setShowJobForm(true); setMessage('')
   }
 
   async function saveJob(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setMessage('')
-    const supabase = createClient()
-    const payload = { ...jobForm, image_url: jobForm.image_url || null, expires_at: jobForm.expires_at ? new Date(`${jobForm.expires_at}T23:59:59`).toISOString() : null }
-    const result = editingJob ? await supabase.from('job_posts').update(payload).eq('id', editingJob) : await supabase.from('job_posts').insert(payload)
-    if (result.error) { setMessage(result.error.message); return }
-    setShowJobForm(false); await load()
+    event.preventDefault()
+    if (jobSaving) return
+    setMessage('')
+    setJobToast(null)
+    setJobSaving(true)
+
+    try {
+      const supabase = createClient()
+      let imageUrl = jobForm.image_url || null
+
+      if (jobImageFile) {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session?.access_token) throw new Error('Your admin session has expired. Please sign in again.')
+
+        const compressedImage = await compressJobImage(jobImageFile)
+        const uploadData = new FormData()
+        uploadData.append('file', compressedImage, 'job-image.jpg')
+        const uploadResult = await fetch('/api/admin/cloudinary-upload', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${session.access_token}` },
+          body: uploadData,
+        })
+        const uploadBody = await uploadResult.json() as { secureUrl?: string; error?: string }
+        if (!uploadResult.ok || !uploadBody.secureUrl) throw new Error(uploadBody.error || 'Unable to upload the job image.')
+        imageUrl = uploadBody.secureUrl
+      }
+
+      const payload = { ...jobForm, image_url: imageUrl, expires_at: jobForm.expires_at ? new Date(`${jobForm.expires_at}T23:59:59`).toISOString() : null }
+      const result = editingJob ? await supabase.from('job_posts').update(payload).eq('id', editingJob) : await supabase.from('job_posts').insert(payload)
+      if (result.error) throw new Error(result.error.message)
+
+      setShowJobForm(false)
+      setJobImageFile(null)
+      setJobToast({ type: 'success', message: editingJob ? 'Job post updated successfully.' : 'Job post published successfully.' })
+      await load()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to save the job post.'
+      setMessage(message)
+      setJobToast({ type: 'error', message })
+    } finally {
+      setJobSaving(false)
+    }
   }
 
   async function removeJob(id: string) {
@@ -220,7 +264,25 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await createClient().auth.signOut(); router.replace('/admin/login')
   }
 
-  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => setShowJobForm(false), setJobForm, saveJob, removeJob, toggleJob, fetchJobApplications, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
+  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, setJobImageFile, jobSaving, jobToast, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => { setShowJobForm(false); setJobImageFile(null) }, setJobForm, saveJob, removeJob, toggleJob, fetchJobApplications, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
+}
+
+async function compressJobImage(file: File) {
+  const image = await createImageBitmap(file)
+  const maxDimension = 1600
+  const scale = Math.min(1, maxDimension / Math.max(image.width, image.height))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(image.width * scale))
+  canvas.height = Math.max(1, Math.round(image.height * scale))
+  canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height)
+  image.close()
+
+  for (const quality of [0.82, 0.7, 0.58, 0.46, 0.34]) {
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality))
+    if (blob && blob.size <= 200 * 1024) return blob
+  }
+
+  throw new Error('This image could not be compressed below 200 KB. Please choose a smaller image.')
 }
 
 export function useAdmin() {

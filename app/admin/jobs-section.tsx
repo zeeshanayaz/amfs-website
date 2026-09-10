@@ -1,9 +1,12 @@
 'use client'
 
 import { FormEvent } from 'react'
-import { Eye, ExternalLink, Pencil, Plus, X } from 'lucide-react'
+import Image from "next/image";
+import { AlertCircle, CheckCircle2, Eye, ExternalLink, LoaderCircle, Pencil, Plus, X } from 'lucide-react'
 import { useState } from 'react'
+import campuses from '@/data/campuses.json'
 import type { FormState, Job, JobApplication } from './types'
+import { Lightbox } from '@/components/ui/lightbox';
 
 type JobsSectionProps = {
   jobs: Job[]
@@ -11,12 +14,15 @@ type JobsSectionProps = {
   showForm: boolean
   form: FormState
   editing: string | null
+  jobSaving: boolean
+  jobToast: { type: 'success' | 'error'; message: string } | null
   onOpenNew: () => void
   onEdit: (job: Job) => void
   onRemove: (id: string) => void
   onToggle: (job: Job) => void
   onFetchApplications: (jobId: string) => Promise<JobApplication[]>
   onFormChange: (form: FormState) => void
+  onImageFileChange: (file: File | null) => void
   onSave: (event: FormEvent<HTMLFormElement>) => void
   onCloseForm: () => void
 }
@@ -27,12 +33,15 @@ export function JobsSection({
   showForm,
   form,
   editing,
+  jobSaving,
+  jobToast,
   onOpenNew,
   onEdit,
   onRemove,
   onToggle,
   onFetchApplications,
   onFormChange,
+  onImageFileChange,
   onSave,
   onCloseForm,
 }: JobsSectionProps) {
@@ -42,6 +51,7 @@ export function JobsSection({
   const [applicationsLoading, setApplicationsLoading] = useState(false)
   const [applicationsError, setApplicationsError] = useState('')
   const jobTitles = new Map(jobs.map((job) => [job.id, job.title]))
+  const [previewImage, setPreviewImage] = useState<{ src: string; title: string } | null>(null)
 
   async function viewApplications(job: Job) {
     setSelectedJob(job)
@@ -60,6 +70,20 @@ export function JobsSection({
 
   return (
     <>
+      {jobToast ? (
+        <div
+          role={jobToast.type === 'error' ? 'alert' : 'status'}
+          className={`fixed right-4 top-4 z-[60] flex max-w-sm items-start gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold shadow-xl ${
+            jobToast.type === 'error'
+              ? 'border-destructive/20 bg-destructive text-destructive-foreground'
+              : 'border-brand-royal/20 bg-brand-navy text-white'
+          }`}
+        >
+          {jobToast.type === 'error' ? <AlertCircle className="mt-0.5 size-5 shrink-0" /> : <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-brand-gold" />}
+          <span>{jobToast.message}</span>
+        </div>
+      ) : null}
+
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Career management</p>
@@ -90,6 +114,43 @@ export function JobsSection({
           jobs.map((job) => (
             <article key={job.id} className="rounded-2xl border border-brand-border bg-background p-5 sm:p-6">
               <div className="flex flex-col justify-between gap-4 sm:flex-row">
+               {/* Job Image */}
+                <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
+                  {job.image_url ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPreviewImage({
+                          src: job.image_url!,
+                          title: job.title,
+                        })
+                      }
+                      className="group absolute inset-0 h-full w-full cursor-zoom-in"
+                      aria-label={`Preview ${job.title} image`}
+                    >
+                      <Image
+                        src={job.image_url}
+                        alt={job.title}
+                        fill
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, 208px"
+                      />
+
+                      {/* Optional visual indication */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-brand-navy/0 transition group-hover:bg-brand-navy/20">
+                        <span className="rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-brand-navy opacity-0 shadow-md transition group-hover:opacity-100">
+                          View image
+                        </span>
+                      </div>
+                    </button>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-brand-light">
+                      <span className="text-sm font-semibold text-brand-royal">
+                        Al Musleh Foundation School
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div>
                   <div className="mb-2 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
                     <span
@@ -102,7 +163,7 @@ export function JobsSection({
                   </div>
                   <h3 className="font-serif text-2xl font-bold">{job.title}</h3>
                   <p className="mt-1 text-sm text-brand-dark-gray">{job.campus_name} · {job.department}</p>
-                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-brand-dark-gray">{job.description}</p>
+                  <p className="mt-3 line-clamp-4 text-sm leading-6 text-brand-dark-gray">{job.description}</p>
                 </div>
                 <div className="flex shrink-0 items-start gap-2">
                   <button
@@ -244,14 +305,16 @@ export function JobsSection({
               <button
                 type="button"
                 onClick={onCloseForm}
+                disabled={jobSaving}
                 aria-label="Close form"
-                className="rounded-full p-2 hover:bg-brand-light"
+                className="rounded-full p-2 hover:bg-brand-light disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <X className="size-5" />
               </button>
             </div>
 
-            <form onSubmit={onSave} className="grid gap-4 sm:grid-cols-2">
+            <form onSubmit={onSave} aria-busy={jobSaving} className="grid gap-4 sm:grid-cols-2">
+              <fieldset disabled={jobSaving} className="contents">
               <label className="grid gap-2 text-sm font-semibold sm:col-span-2">
                 Job title
                 <input
@@ -292,12 +355,18 @@ export function JobsSection({
 
               <label className="grid gap-2 text-sm font-semibold">
                 Campus name
-                <input
+                <select
                   required
                   value={form.campus_name}
                   onChange={(event) => onFormChange({ ...form, campus_name: event.target.value })}
                   className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal outline-none focus:border-brand-royal"
-                />
+                >
+                  {campuses.map((campus) => (
+                    <option key={campus.name} value={campus.name}>
+                      {campus.name}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="grid gap-2 text-sm font-semibold">
@@ -311,13 +380,14 @@ export function JobsSection({
               </label>
 
               <label className="grid gap-2 text-sm font-semibold sm:col-span-2">
-                Image URL <span className="font-normal text-brand-dark-gray">(optional)</span>
+                Job image <span className="font-normal text-brand-dark-gray">(optional, JPEG, PNG, or WebP; max 200 KB after compression)</span>
                 <input
-                  type="url"
-                  value={form.image_url ?? ''}
-                  onChange={(event) => onFormChange({ ...form, image_url: event.target.value })}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) => onImageFileChange(event.target.files?.[0] ?? null)}
                   className="rounded-xl border border-brand-border bg-brand-off-white px-4 py-3 font-normal outline-none focus:border-brand-royal"
                 />
+                {form.image_url ? <span className="text-xs font-normal text-brand-dark-gray">An existing image will be kept unless you select a new file.</span> : null}
               </label>
 
               <label className="grid gap-2 text-sm font-semibold">
@@ -352,13 +422,31 @@ export function JobsSection({
                 />
               </label>
 
-              <button className="rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-brand-royal sm:col-span-2">
-                {editing ? 'Save changes' : 'Publish job post'}
-              </button>
+                <button className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-brand-royal disabled:cursor-wait disabled:opacity-70 sm:col-span-2">
+                  {jobSaving ? <LoaderCircle className="size-4 animate-spin" /> : null}
+                  {jobSaving ? 'Saving job post...' : editing ? 'Save changes' : 'Publish job post'}
+                </button>
+              </fieldset>
             </form>
           </div>
         </div>
       ) : null}
+
+      <Lightbox
+          open={Boolean(previewImage)}
+          title={previewImage?.title}
+          onClose={() => setPreviewImage(null)}
+        >
+          {previewImage ? (
+            <Image
+              src={previewImage.src}
+              alt={previewImage.title}
+              width={1600}
+              height={1200}
+              className="h-[75vh] w-full object-contain"
+            />
+          ) : null}
+        </Lightbox>
     </>
   )
 }

@@ -12,6 +12,8 @@ export default function AdminPage() {
       message={admin.message}
       showForm={admin.showJobForm}
       form={admin.jobForm}
+      jobSaving={admin.jobSaving}
+      jobToast={admin.jobToast}
       editing={admin.editingJob}
       onOpenNew={admin.openNewJob}
       onEdit={admin.editJob}
@@ -19,6 +21,7 @@ export default function AdminPage() {
       onToggle={admin.toggleJob}
       onFetchApplications={admin.fetchJobApplications}
       onFormChange={admin.setJobForm}
+      onImageFileChange={admin.setJobImageFile}
       onSave={admin.saveJob}
       onCloseForm={admin.closeJobForm}
     />

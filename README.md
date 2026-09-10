@@ -32,6 +32,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 4. Run the SQL schema in `supabase/schema.sql` using the Supabase SQL editor.
 5. Start the app with `npm run dev`.
 
+## Cloudinary setup
+
+Job images are compressed in the browser and uploaded through the authenticated server route. Add these server-only values to `.env.local`:
+
+```env
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+Find all three values in the Cloudinary dashboard under **Product Environment Settings**. Do not prefix them with `NEXT_PUBLIC_` or expose the API secret in client-side code.
+
 ## Admin workflow
 
 - Visit `/admin/login`

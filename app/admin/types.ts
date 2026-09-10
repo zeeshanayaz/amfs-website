@@ -65,7 +65,7 @@ export const emptyForm: FormState = {
   description: '',
   department: 'Teaching',
   employment_type: 'Full-time',
-  campus_name: 'Main Campus',
+  campus_name: 'Muslehuddin Campus',
   location: 'Karachi, Pakistan',
   address: 'Karachi, Pakistan',
   image_url: '',

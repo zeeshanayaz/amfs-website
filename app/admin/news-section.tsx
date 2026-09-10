@@ -1,8 +1,10 @@
 'use client'
 
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
+import Image from "next/image";
 import { Pencil, Plus, Trash2, X } from 'lucide-react'
 import type { NewsEvent, NewsFormState } from './types'
+import { Lightbox } from '@/components/ui/lightbox';
 
 type NewsSectionProps = {
   newsEvents: NewsEvent[]
@@ -33,6 +35,7 @@ export function NewsSection({
 }: NewsSectionProps) {
   const isEditing = editingContent !== null
   const modalTitle = editingContent === 'new' ? 'Add update' : 'Update details'
+  const [previewImage, setPreviewImage] = useState<{ src: string; title: string } | null>(null)
 
   return (
     <>
@@ -66,12 +69,56 @@ export function NewsSection({
           newsEvents.map((item) => (
             <article key={item.id} className="rounded-2xl border border-brand-border bg-background p-5">
               <div className="flex items-start justify-between gap-4">
+                {/* Image */}
+                <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
+                  {item.image_url ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPreviewImage({
+                          src: item.image_url!,
+                          title: item.title,
+                        })
+                      }
+                      className="group absolute inset-0 h-full w-full cursor-zoom-in"
+                      aria-label={`Preview ${item.title} image`}
+                    >
+                      <Image
+                        src={item.image_url}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, 208px"
+                      />
+
+                      {/* Optional visual indication */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-brand-navy/0 transition group-hover:bg-brand-navy/20">
+                        <span className="rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-brand-navy opacity-0 shadow-md transition group-hover:opacity-100">
+                          View image
+                        </span>
+                      </div>
+                    </button>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-brand-light">
+                      <span className="text-sm font-semibold text-brand-royal">
+                        Al Musleh Foundation School
+                      </span>
+                    </div>
+                  )}
+                </div>
+
                 <div>
-                  <span className="rounded-full bg-brand-light px-3 py-1 text-xs font-bold text-brand-royal">
-                    {item.is_published ? 'Published' : 'Draft'}
-                  </span>
-                  <h3 className="mt-3 font-serif text-2xl font-bold">{item.title}</h3>
-                  <p className="mt-2 text-sm text-brand-dark-gray">{item.category} · {item.excerpt}</p>
+                  <div className="mb-2 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
+                    <span
+                      className={`rounded-full px-3 py-1 ${item.is_published ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'
+                        }`}
+                    >
+                      {item.is_published ? 'Published' : 'Draft'}
+                    </span>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold">{item.title}</h3>
+                  <p className="mt-1 text-sm text-brand-dark-gray">{item.category} · {item.excerpt}</p>
+                  <p className="mt-3 line-clamp-4 text-sm leading-6 text-brand-dark-gray">{item.body}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -173,6 +220,22 @@ export function NewsSection({
           </form>
         </div>
       ) : null}
+
+      <Lightbox
+        open={Boolean(previewImage)}
+        title={previewImage?.title}
+        onClose={() => setPreviewImage(null)}
+      >
+        {previewImage ? (
+          <Image
+            src={previewImage.src}
+            alt={previewImage.title}
+            width={1600}
+            height={1200}
+            className="h-[75vh] w-full object-contain"
+          />
+        ) : null}
+      </Lightbox>
     </>
   )
 }
