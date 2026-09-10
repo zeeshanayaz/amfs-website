@@ -6,11 +6,11 @@ import { ScrollToTop } from '@/components/scroll-to-top'
 import { ComingSoon } from '@/components/ui/coming-soon'
 
 export const metadata: Metadata = {
-    title: 'Alumini | Al Musleh Foundation School',
+    title: 'Alumni | Al Musleh Foundation School',
     description: 'Connect with our distinguished alumni and stay updated on their achievements and contributions to the community.',
 }
 
-export default function Alumini() {
+export default function Alumni() {
     return (
         <>
             <Navbar />
