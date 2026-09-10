@@ -220,7 +220,7 @@ export function Footer() {
                   { label: 'Apply for Admission', href: '/admissions' },
                   { label: 'News & Events', href: '/news-events' },
                   { label: 'Testimonials', href: '/testimonials' },
-                  { label: 'Alumini', href: '/alumini' },
+                  { label: 'Alumni', href: '/alumni' },
                   { label: 'Careers', href: '/careers' },
                 ].map(({ label, href }) => (
                   <li key={label}>
