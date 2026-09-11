@@ -29,13 +29,14 @@ export async function POST(request: Request) {
 
   const body = await request.formData()
   const file = body.get('file')
+  const requestedFolder = body.get('folder')
+  const folder = requestedFolder === 'faculty' ? 'faculty' : 'careers'
   if (!(file instanceof File) || !file.type.startsWith('image/')) {
     return NextResponse.json({ error: 'A valid image file is required.' }, { status: 400 })
   }
   if (file.size > 200 * 1024) return NextResponse.json({ error: 'The compressed image must be 200 KB or smaller.' }, { status: 400 })
 
   const timestamp = Math.floor(Date.now() / 1000).toString()
-  const folder = 'careers'
   const signature = createHash('sha1')
     .update(`folder=${folder}&timestamp=${timestamp}${apiSecret}`)
     .digest('hex')

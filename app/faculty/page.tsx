@@ -3,7 +3,7 @@ import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import { PageHeading } from '@/components/ui/page-heading'
 import { ScrollToTop } from '@/components/scroll-to-top'
-import { ComingSoon } from '@/components/ui/coming-soon'
+import { FacultyDirectory } from '@/components/faculty-directory'
 
 export const metadata: Metadata = {
     title: 'Faculty | Al Musleh Foundation School',
@@ -16,11 +16,11 @@ export default function Faculty() {
             <Navbar />
             <main id="main-content" className="bg-brand-off-white text-brand-navy">
                 <PageHeading
-                    eyebrow="Distinguished Faculty"
+                    eyebrow="Meet Our Expert Faculty"
                     title="AMFS Faculty"
                     description="Meet our dedicated and experienced faculty members."
                 />
-                <ComingSoon />
+                <FacultyDirectory />
             </main>
             <Footer />
             <ScrollToTop />

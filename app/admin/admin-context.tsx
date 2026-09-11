@@ -3,290 +3,70 @@
 import { FormEvent, createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import type {
-  ContactSubmission,
-  FormState,
-  Job,
-  JobApplication,
-  NewsEvent,
-  NewsFormState,
-  Testimonial,
-  TestimonialFormState,
-} from './types'
-import { emptyForm } from './types'
+import type { CampusOption, ContactSubmission, Faculty, FacultyFormState, FormState, Job, JobApplication, NewsEvent, NewsFormState, Testimonial, TestimonialFormState } from './types'
+import { emptyFacultyForm, emptyForm } from './types'
 
+type Toast = { type: 'success' | 'error'; message: string }
 type AdminContextValue = {
-  jobs: Job[]
-  newsEvents: NewsEvent[]
-  testimonials: Testimonial[]
-  contacts: ContactSubmission[]
-  loading: boolean
-  message: string
-  showJobForm: boolean
-  editingJob: string | null
-  jobForm: FormState
-  setJobImageFile: (file: File | null) => void
-  jobSaving: boolean
-  jobToast: { type: 'success' | 'error'; message: string } | null
-  editingContent: string | null
-  newsForm: NewsFormState
-  testimonialForm: TestimonialFormState
-  openNewJob: () => void
-  editJob: (job: Job) => void
-  closeJobForm: () => void
-  setJobForm: (form: FormState) => void
-  saveJob: (event: FormEvent<HTMLFormElement>) => void
-  removeJob: (id: string) => void
-  toggleJob: (job: Job) => void
-  fetchJobApplications: (jobId: string) => Promise<JobApplication[]>
-  openNewsEditor: () => void
-  editNews: (item: NewsEvent) => void
-  closeContentEditor: () => void
-  setNewsForm: (form: NewsFormState) => void
-  saveNews: (event: FormEvent<HTMLFormElement>) => void
-  openTestimonialEditor: () => void
-  editTestimonial: (item: Testimonial) => void
-  setTestimonialForm: (form: TestimonialFormState) => void
-  saveTestimonial: (event: FormEvent<HTMLFormElement>) => void
-  toggleContent: (table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) => void
-  removeContent: (table: 'news_events' | 'testimonials', id: string) => void
-  markContact: (id: string) => void
-  signOut: () => void
+  jobs: Job[]; newsEvents: NewsEvent[]; testimonials: Testimonial[]; contacts: ContactSubmission[]; faculties: Faculty[]; campuses: CampusOption[]; loading: boolean; message: string
+  showJobForm: boolean; editingJob: string | null; jobForm: FormState; setJobImageFile: (file: File | null) => void; jobSaving: boolean; jobToast: Toast | null
+  showFacultyForm: boolean; editingFaculty: string | null; facultyForm: FacultyFormState; facultyImageFile: File | null; facultySaving: boolean; facultyToast: Toast | null
+  editingContent: string | null; newsForm: NewsFormState; testimonialForm: TestimonialFormState
+  openNewJob: () => void; editJob: (job: Job) => void; closeJobForm: () => void; setJobForm: (form: FormState) => void; saveJob: (event: FormEvent<HTMLFormElement>) => void; removeJob: (id: string) => void; toggleJob: (job: Job) => void
+  openNewFaculty: () => void; editFaculty: (faculty: Faculty) => void; closeFacultyForm: () => void; setFacultyForm: (form: FacultyFormState) => void; setFacultyImageFile: (file: File | null) => void; saveFaculty: (event: FormEvent<HTMLFormElement>) => void; removeFaculty: (id: string) => void; toggleFaculty: (faculty: Faculty) => void
+  fetchJobApplications: (jobId: string) => Promise<JobApplication[]>; openNewsEditor: () => void; editNews: (item: NewsEvent) => void; closeContentEditor: () => void; setNewsForm: (form: NewsFormState) => void; saveNews: (event: FormEvent<HTMLFormElement>) => void; openTestimonialEditor: () => void; editTestimonial: (item: Testimonial) => void; setTestimonialForm: (form: TestimonialFormState) => void; saveTestimonial: (event: FormEvent<HTMLFormElement>) => void; toggleContent: (table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) => void; removeContent: (table: 'news_events' | 'testimonials', id: string) => void; markContact: (id: string) => void; signOut: () => void
 }
 
 const AdminContext = createContext<AdminContextValue | null>(null)
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [newsEvents, setNewsEvents] = useState<NewsEvent[]>([])
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [contacts, setContacts] = useState<ContactSubmission[]>([])
-  const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState('')
-  const [showJobForm, setShowJobForm] = useState(false)
-  const [editingJob, setEditingJob] = useState<string | null>(null)
-  const [jobForm, setJobForm] = useState<FormState>(emptyForm)
-  const [jobImageFile, setJobImageFile] = useState<File | null>(null)
-  const [jobSaving, setJobSaving] = useState(false)
-  const [jobToast, setJobToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
-  const [editingContent, setEditingContent] = useState<string | null>(null)
-  const [newsForm, setNewsFormState] = useState<NewsFormState>({
-    title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '',
-  })
-  const [testimonialForm, setTestimonialFormState] = useState<TestimonialFormState>({
-    parent_name: '', student_name: '', thoughts: '', display_order: 0,
-  })
+  const [jobs, setJobs] = useState<Job[]>([]); const [newsEvents, setNewsEvents] = useState<NewsEvent[]>([]); const [testimonials, setTestimonials] = useState<Testimonial[]>([]); const [contacts, setContacts] = useState<ContactSubmission[]>([]); const [faculties, setFaculties] = useState<Faculty[]>([]); const [campuses, setCampuses] = useState<CampusOption[]>([])
+  const [loading, setLoading] = useState(true); const [message, setMessage] = useState(''); const [showJobForm, setShowJobForm] = useState(false); const [editingJob, setEditingJob] = useState<string | null>(null); const [jobForm, setJobForm] = useState<FormState>(emptyForm); const [jobImageFile, setJobImageFile] = useState<File | null>(null); const [jobSaving, setJobSaving] = useState(false); const [jobToast, setJobToast] = useState<Toast | null>(null)
+  const [showFacultyForm, setShowFacultyForm] = useState(false); const [editingFaculty, setEditingFaculty] = useState<string | null>(null); const [facultyForm, setFacultyForm] = useState<FacultyFormState>(emptyFacultyForm); const [facultyImageFile, setFacultyImageFile] = useState<File | null>(null); const [facultySaving, setFacultySaving] = useState(false); const [facultyToast, setFacultyToast] = useState<Toast | null>(null)
+  const [editingContent, setEditingContent] = useState<string | null>(null); const [newsForm, setNewsFormState] = useState<NewsFormState>({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); const [testimonialForm, setTestimonialFormState] = useState<TestimonialFormState>({ parent_name: '', student_name: '', thoughts: '', display_order: 0 })
 
   async function load() {
     try {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        setLoading(false)
-        router.replace('/admin/login')
-        return
-      }
-
+      const supabase = createClient(); const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setLoading(false); router.replace('/admin/login'); return }
       const { data: admin } = await supabase.from('admin_users').select('id').eq('id', user.id).maybeSingle()
-      if (!admin) {
-        setLoading(false)
-        await supabase.auth.signOut()
-        router.replace('/admin/login')
-        return
-      }
-
-      const [{ data: jobData }, { data: newsData }, { data: testimonialData }, { data: contactData }] = await Promise.all([
-        supabase.from('job_posts').select('*').order('created_at', { ascending: false }),
-        supabase.from('news_events').select('*').order('created_at', { ascending: false }),
-        supabase.from('testimonials').select('*').order('display_order', { ascending: true }),
-        supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }),
+      if (!admin) { setLoading(false); await supabase.auth.signOut(); router.replace('/admin/login'); return }
+      const [{ data: jobData }, { data: newsData }, { data: testimonialData }, { data: contactData }, { data: facultyData }, { data: campusData }] = await Promise.all([
+        supabase.from('job_posts').select('*').order('created_at', { ascending: false }), supabase.from('news_events').select('*').order('created_at', { ascending: false }), supabase.from('testimonials').select('*').order('display_order', { ascending: true }), supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }), supabase.from('faculty').select('*').order('full_name', { ascending: true }), supabase.from('campuses').select('id, name').order('name', { ascending: true }),
       ])
-
-      setJobs((jobData ?? []) as Job[])
-      setNewsEvents((newsData ?? []) as NewsEvent[])
-      setTestimonials((testimonialData ?? []) as Testimonial[])
-      setContacts((contactData ?? []) as ContactSubmission[])
-      setLoading(false)
-    } catch {
-      setLoading(false)
-      router.replace('/admin/login')
-    }
+      setJobs((jobData ?? []) as Job[]); setNewsEvents((newsData ?? []) as NewsEvent[]); setTestimonials((testimonialData ?? []) as Testimonial[]); setContacts((contactData ?? []) as ContactSubmission[]); setFaculties((facultyData ?? []) as Faculty[]); setCampuses((campusData ?? []) as CampusOption[]); setLoading(false)
+    } catch { setLoading(false); router.replace('/admin/login') }
   }
-
   useEffect(() => { void load() }, [])
 
-  function openNewJob() {
-    setEditingJob(null); setJobForm(emptyForm); setJobImageFile(null); setJobToast(null); setShowJobForm(true); setMessage('')
-  }
+  function openNewJob() { setEditingJob(null); setJobForm(emptyForm); setJobImageFile(null); setJobToast(null); setShowJobForm(true); setMessage('') }
+  function editJob(job: Job) { setEditingJob(job.id); setJobImageFile(null); setJobToast(null); setJobForm({ ...job, image_url: job.image_url ?? '', expires_at: job.expires_at ? job.expires_at.slice(0, 10) : '' }); setShowJobForm(true); setMessage('') }
+  async function saveJob(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (jobSaving) return; setMessage(''); setJobToast(null); setJobSaving(true); try { const supabase = createClient(); let imageUrl = jobForm.image_url || null; if (jobImageFile) { const { data: { session } } = await supabase.auth.getSession(); if (!session?.access_token) throw new Error('Your admin session has expired. Please sign in again.'); const uploadData = new FormData(); uploadData.append('file', await compressAdminImage(jobImageFile), 'job-image.jpg'); const response = await fetch('/api/admin/cloudinary-upload', { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, body: uploadData }); const body = await response.json() as { secureUrl?: string; error?: string }; if (!response.ok || !body.secureUrl) throw new Error(body.error || 'Unable to upload the job image.'); imageUrl = body.secureUrl } const payload = { ...jobForm, image_url: imageUrl, expires_at: jobForm.expires_at ? new Date(`${jobForm.expires_at}T23:59:59`).toISOString() : null }; const result = editingJob ? await supabase.from('job_posts').update(payload).eq('id', editingJob) : await supabase.from('job_posts').insert(payload); if (result.error) throw new Error(result.error.message); setShowJobForm(false); setJobImageFile(null); setJobToast({ type: 'success', message: editingJob ? 'Job post updated successfully.' : 'Job post published successfully.' }); await load() } catch (error) { const message = error instanceof Error ? error.message : 'Unable to save the job post.'; setMessage(message); setJobToast({ type: 'error', message }) } finally { setJobSaving(false) } }
+  async function removeJob(id: string) { if (!window.confirm('Delete this job post?')) return; await createClient().from('job_posts').delete().eq('id', id); await load() }
+  async function toggleJob(job: Job) { await createClient().from('job_posts').update({ is_active: !job.is_active }).eq('id', job.id); await load() }
 
-  function editJob(job: Job) {
-    setEditingJob(job.id)
-    setJobImageFile(null)
-    setJobToast(null)
-    setJobForm({ ...job, image_url: job.image_url ?? '', expires_at: job.expires_at ? job.expires_at.slice(0, 10) : '' })
-    setShowJobForm(true); setMessage('')
-  }
+  function openNewFaculty() { setEditingFaculty(null); setFacultyForm({ ...emptyFacultyForm, campus_id: campuses[0]?.id ?? '' }); setFacultyImageFile(null); setFacultyToast(null); setShowFacultyForm(true); setMessage('') }
+  function editFaculty(faculty: Faculty) { setEditingFaculty(faculty.id); setFacultyImageFile(null); setFacultyToast(null); setFacultyForm({ ...faculty, image_url: faculty.image_url ?? '', email: faculty.email ?? '', bio_summary: faculty.bio_summary ?? '', linkedin_url: faculty.linkedin_url ?? '' }); setShowFacultyForm(true); setMessage('') }
+  async function saveFaculty(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (facultySaving) return; setMessage(''); setFacultyToast(null); setFacultySaving(true); try { const supabase = createClient(); let imageUrl = facultyForm.image_url || null; if (facultyImageFile) { const { data: { session } } = await supabase.auth.getSession(); if (!session?.access_token) throw new Error('Your admin session has expired. Please sign in again.'); const uploadData = new FormData(); uploadData.append('file', await compressAdminImage(facultyImageFile), 'faculty-image.jpg'); uploadData.append('folder', 'faculty'); const response = await fetch('/api/admin/cloudinary-upload', { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, body: uploadData }); const body = await response.json() as { secureUrl?: string; error?: string }; if (!response.ok || !body.secureUrl) throw new Error(body.error || 'Unable to upload the faculty image.'); imageUrl = body.secureUrl } const payload = { ...facultyForm, image_url: imageUrl, email: facultyForm.email || null, bio_summary: facultyForm.bio_summary || null, linkedin_url: facultyForm.linkedin_url || null }; const result = editingFaculty ? await supabase.from('faculty').update(payload).eq('id', editingFaculty) : await supabase.from('faculty').insert(payload); if (result.error) throw new Error(result.error.message); setShowFacultyForm(false); setFacultyImageFile(null); setFacultyToast({ type: 'success', message: editingFaculty ? 'Faculty member updated successfully.' : 'Faculty member added successfully.' }); await load() } catch (error) { const message = error instanceof Error ? error.message : 'Unable to save the faculty member.'; setMessage(message); setFacultyToast({ type: 'error', message }) } finally { setFacultySaving(false) } }
+  async function removeFaculty(id: string) { if (!window.confirm('Delete this faculty member?')) return; await createClient().from('faculty').delete().eq('id', id); await load() }
+  async function toggleFaculty(faculty: Faculty) { await createClient().from('faculty').update({ is_active: !faculty.is_active }).eq('id', faculty.id); await load() }
+  async function fetchJobApplications(jobId: string) { const { data, error } = await createClient().from('job_applications').select('*').eq('job_id', jobId).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as JobApplication[] }
+  function openNewsEditor() { setEditingContent('new'); setNewsFormState({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setMessage('') }
+  function editNews(item: NewsEvent) { setEditingContent(item.id); setNewsFormState({ title: item.title, category: item.category, excerpt: item.excerpt, body: item.body, image_url: item.image_url ?? '', event_date: item.event_date ? item.event_date.slice(0, 10) : '' }); setMessage('') }
+  async function saveNews(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setMessage(''); const payload = { ...newsForm, image_url: newsForm.image_url || null, event_date: newsForm.event_date ? new Date(`${newsForm.event_date}T12:00:00`).toISOString() : null }; const result = editingContent === 'new' ? await createClient().from('news_events').insert(payload) : editingContent ? await createClient().from('news_events').update(payload).eq('id', editingContent) : null; if (!result) { setMessage('Unable to save update.'); return }; if (result.error) { setMessage(result.error.message); return }; setEditingContent(null); await load() }
+  function openTestimonialEditor() { setEditingContent('new'); setTestimonialFormState({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }); setMessage('') }
+  function editTestimonial(item: Testimonial) { setEditingContent(item.id); setTestimonialFormState({ parent_name: item.parent_name, student_name: item.student_name, thoughts: item.thoughts, display_order: item.display_order }); setMessage('') }
+  async function saveTestimonial(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setMessage(''); const result = editingContent === 'new' ? await createClient().from('testimonials').insert(testimonialForm) : editingContent ? await createClient().from('testimonials').update(testimonialForm).eq('id', editingContent) : null; if (!result) { setMessage('Unable to save testimonial.'); return }; if (result.error) { setMessage(result.error.message); return }; setEditingContent(null); await load() }
+  async function toggleContent(table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) { const key = 'is_published' in item ? item.is_published : false; await createClient().from(table).update({ is_published: !key }).eq('id', item.id); await load() }
+  async function removeContent(table: 'news_events' | 'testimonials', id: string) { if (!window.confirm('Delete this item?')) return; await createClient().from(table).delete().eq('id', id); await load() }
+  async function markContact(id: string) { await createClient().from('contact_submissions').update({ is_read: true }).eq('id', id); await load() }
+  async function signOut() { await createClient().auth.signOut(); router.replace('/admin/login') }
 
-  async function saveJob(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (jobSaving) return
-    setMessage('')
-    setJobToast(null)
-    setJobSaving(true)
-
-    try {
-      const supabase = createClient()
-      let imageUrl = jobForm.image_url || null
-
-      if (jobImageFile) {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session?.access_token) throw new Error('Your admin session has expired. Please sign in again.')
-
-        const compressedImage = await compressJobImage(jobImageFile)
-        const uploadData = new FormData()
-        uploadData.append('file', compressedImage, 'job-image.jpg')
-        const uploadResult = await fetch('/api/admin/cloudinary-upload', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${session.access_token}` },
-          body: uploadData,
-        })
-        const uploadBody = await uploadResult.json() as { secureUrl?: string; error?: string }
-        if (!uploadResult.ok || !uploadBody.secureUrl) throw new Error(uploadBody.error || 'Unable to upload the job image.')
-        imageUrl = uploadBody.secureUrl
-      }
-
-      const payload = { ...jobForm, image_url: imageUrl, expires_at: jobForm.expires_at ? new Date(`${jobForm.expires_at}T23:59:59`).toISOString() : null }
-      const result = editingJob ? await supabase.from('job_posts').update(payload).eq('id', editingJob) : await supabase.from('job_posts').insert(payload)
-      if (result.error) throw new Error(result.error.message)
-
-      setShowJobForm(false)
-      setJobImageFile(null)
-      setJobToast({ type: 'success', message: editingJob ? 'Job post updated successfully.' : 'Job post published successfully.' })
-      await load()
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unable to save the job post.'
-      setMessage(message)
-      setJobToast({ type: 'error', message })
-    } finally {
-      setJobSaving(false)
-    }
-  }
-
-  async function removeJob(id: string) {
-    if (!window.confirm('Delete this job post?')) return
-    await createClient().from('job_posts').delete().eq('id', id); await load()
-  }
-
-  async function toggleJob(job: Job) {
-    await createClient().from('job_posts').update({ is_active: !job.is_active }).eq('id', job.id); await load()
-  }
-
-  async function fetchJobApplications(jobId: string) {
-    const { data, error } = await createClient()
-      .from('job_applications')
-      .select('*')
-      .eq('job_id', jobId)
-      .order('created_at', { ascending: false })
-
-    if (error) throw error
-    return (data ?? []) as JobApplication[]
-  }
-
-  function openNewsEditor() {
-    setEditingContent('new'); setNewsFormState({ title: '', category: 'News', excerpt: '', body: '', image_url: '', event_date: '' }); setMessage('')
-  }
-
-  function editNews(item: NewsEvent) {
-    setEditingContent(item.id)
-    setNewsFormState({
-      title: item.title,
-      category: item.category,
-      excerpt: item.excerpt,
-      body: item.body,
-      image_url: item.image_url ?? '',
-      event_date: item.event_date ? item.event_date.slice(0, 10) : '',
-    })
-    setMessage('')
-  }
-
-  async function saveNews(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setMessage('')
-    const payload = { ...newsForm, image_url: newsForm.image_url || null, event_date: newsForm.event_date ? new Date(`${newsForm.event_date}T12:00:00`).toISOString() : null }
-    const result = editingContent === 'new'
-      ? await createClient().from('news_events').insert(payload)
-      : editingContent ? await createClient().from('news_events').update(payload).eq('id', editingContent) : null
-    if (!result) { setMessage('Unable to save update.'); return }
-    if (result.error) { setMessage(result.error.message); return }
-    setEditingContent(null); await load()
-  }
-
-  function openTestimonialEditor() {
-    setEditingContent('new'); setTestimonialFormState({ parent_name: '', student_name: '', thoughts: '', display_order: 0 }); setMessage('')
-  }
-
-  function editTestimonial(item: Testimonial) {
-    setEditingContent(item.id)
-    setTestimonialFormState({
-      parent_name: item.parent_name,
-      student_name: item.student_name,
-      thoughts: item.thoughts,
-      display_order: item.display_order,
-    })
-    setMessage('')
-  }
-
-  async function saveTestimonial(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setMessage('')
-    const result = editingContent === 'new'
-      ? await createClient().from('testimonials').insert(testimonialForm)
-      : editingContent ? await createClient().from('testimonials').update(testimonialForm).eq('id', editingContent) : null
-    if (!result) { setMessage('Unable to save testimonial.'); return }
-    if (result.error) { setMessage(result.error.message); return }
-    setEditingContent(null); await load()
-  }
-
-  async function toggleContent(table: 'news_events' | 'testimonials', item: NewsEvent | Testimonial) {
-    const key = 'is_published' in item ? item.is_published : false
-    await createClient().from(table).update({ is_published: !key }).eq('id', item.id); await load()
-  }
-
-  async function removeContent(table: 'news_events' | 'testimonials', id: string) {
-    if (!window.confirm('Delete this item?')) return
-    await createClient().from(table).delete().eq('id', id); await load()
-  }
-
-  async function markContact(id: string) {
-    await createClient().from('contact_submissions').update({ is_read: true }).eq('id', id); await load()
-  }
-
-  async function signOut() {
-    await createClient().auth.signOut(); router.replace('/admin/login')
-  }
-
-  return <AdminContext.Provider value={{ jobs, newsEvents, testimonials, contacts, loading, message, showJobForm, editingJob, jobForm, setJobImageFile, jobSaving, jobToast, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => { setShowJobForm(false); setJobImageFile(null) }, setJobForm, saveJob, removeJob, toggleJob, fetchJobApplications, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }}>{children}</AdminContext.Provider>
+  const value: AdminContextValue = { jobs, newsEvents, testimonials, contacts, faculties, campuses, loading, message, showJobForm, editingJob, jobForm, setJobImageFile, jobSaving, jobToast, showFacultyForm, editingFaculty, facultyForm, facultyImageFile, facultySaving, facultyToast, editingContent, newsForm, testimonialForm, openNewJob, editJob, closeJobForm: () => { setShowJobForm(false); setJobImageFile(null) }, setJobForm, saveJob, removeJob, toggleJob, openNewFaculty, editFaculty, closeFacultyForm: () => { setShowFacultyForm(false); setFacultyImageFile(null) }, setFacultyForm, setFacultyImageFile, saveFaculty, removeFaculty, toggleFaculty, fetchJobApplications, openNewsEditor, editNews, closeContentEditor: () => setEditingContent(null), setNewsForm: setNewsFormState, saveNews, openTestimonialEditor, editTestimonial, setTestimonialForm: setTestimonialFormState, saveTestimonial, toggleContent, removeContent, markContact, signOut }
+  return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
 }
 
-async function compressJobImage(file: File) {
-  const image = await createImageBitmap(file)
-  const maxDimension = 1600
-  const scale = Math.min(1, maxDimension / Math.max(image.width, image.height))
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.max(1, Math.round(image.width * scale))
-  canvas.height = Math.max(1, Math.round(image.height * scale))
-  canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height)
-  image.close()
+async function compressAdminImage(file: File) { const image = await createImageBitmap(file); const maxDimension = 1600; const scale = Math.min(1, maxDimension / Math.max(image.width, image.height)); const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale)); canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height); image.close(); for (const quality of [0.82, 0.7, 0.58, 0.46, 0.34]) { const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality)); if (blob && blob.size <= 200 * 1024) return blob }; throw new Error('This image could not be compressed below 200 KB. Please choose a smaller image.') }
 
-  for (const quality of [0.82, 0.7, 0.58, 0.46, 0.34]) {
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality))
-    if (blob && blob.size <= 200 * 1024) return blob
-  }
-
-  throw new Error('This image could not be compressed below 200 KB. Please choose a smaller image.')
-}
-
-export function useAdmin() {
-  const context = useContext(AdminContext)
-  if (!context) throw new Error('useAdmin must be used within AdminProvider')
-  return context
-}
+export function useAdmin() { const context = useContext(AdminContext); if (!context) throw new Error('useAdmin must be used within AdminProvider'); return context }

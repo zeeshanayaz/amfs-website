@@ -1,12 +1,13 @@
 'use client'
 
-import { BriefcaseBusiness, Inbox, LayoutDashboard, LogOut, MessageSquareQuote, Newspaper } from 'lucide-react'
+import { BriefcaseBusiness, Inbox, LayoutDashboard, LogOut, MessageSquareQuote, Newspaper, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAdmin } from './admin-context'
 
 const navigation = [
   { href: '/admin/jobs', label: 'Career posts', icon: BriefcaseBusiness },
+  { href: '/admin/faculty', label: 'Faculty', icon: Users },
   { href: '/admin/news-events', label: 'News & Events', icon: Newspaper },
   { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
   { href: '/admin/contacts', label: 'Contact inbox', icon: Inbox },
