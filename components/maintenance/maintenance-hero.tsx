@@ -57,12 +57,12 @@ export function MaintenanceHero() {
       aria-labelledby="hero-heading"
       className="relative overflow-hidden bg-brand-off-white min-h-screen flex flex-col"
     >
-      {/* Decorative fan background — very subtle watermark */}
+      {/* Decorative fan background - very subtle watermark */}
       {/* <div aria-hidden="true" className="absolute inset-0 opacity-[0.035] pointer-events-none">
         <FanWatermark />
       </div> */}
 
-      {/* Large logo watermark — right side, desktop only */}
+      {/* Large logo watermark - right side, desktop only */}
       <div
         aria-hidden="true"
         className="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.05] pointer-events-none select-none hidden xl:block pr-8"
@@ -76,13 +76,13 @@ export function MaintenanceHero() {
         />
       </div>
 
-      {/* Vertical gold accent line — left edge */}
+      {/* Vertical gold accent line - left edge */}
       <div
         aria-hidden="true"
         className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold hidden sm:block"
       />
 
-      {/* Main hero content — grows to fill available height, centers vertically */}
+      {/* Main hero content - grows to fill available height, centers vertically */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto w-full px-6 sm:px-10 lg:px-8 py-16 text-center">
 
         {/* Eyebrow label */}

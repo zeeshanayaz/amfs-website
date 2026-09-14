@@ -5,7 +5,7 @@ const currentYear = new Date().getFullYear()
 const contactItems = [
   {
     icon: MapPin,
-    label: 'Head Campus — Muslehuddin Campus',
+    label: 'Head Campus - Muslehuddin Campus',
     value: 'MR1/38, Suleman Street\nMithadar, Karachi',
     href: "https://maps.app.goo.gl/utv1wgFmSg3McYPy6",
   },
@@ -219,7 +219,7 @@ export function Footer() {
                   { label: 'Our Campuses', href: '/about#campuses' },
                   { label: 'Our Values', href: '/about#core-values' },
                   { label: 'Apply for Admission', href: '/admissions' },
-                  { label: 'News & Events', href: '/news-events' },
+                  
                   { label: 'Testimonials', href: '/testimonials' },
                   { label: 'Alumni', href: '/alumni' },
                   { label: 'Careers', href: '/careers' },
@@ -240,7 +240,7 @@ export function Footer() {
               </ul>
             </nav>
           </div>
-          
+
           {/* Column 4: Support Links */}
           <div>
             <h3 className="font-serif font-semibold text-white text-base mb-5 flex items-center gap-2">
@@ -253,6 +253,8 @@ export function Footer() {
             <nav aria-label="Footer navigation">
               <ul className="space-y-2.5">
                 {[
+                  { label: 'Blog', href: '/blog' },
+                  { label: 'News & Events', href: '/news-events' },
                   { label: 'Contact Us', href: '/contact' },
                   { label: 'Privacy Policy', href: '/privacy-policy' },
                 ].map(({ label, href }) => (

@@ -1,6 +1,6 @@
 'use client'
 
-// Social media platform definitions — add new platforms here without changing layout
+// Social media platform definitions - add new platforms here without changing layout
 interface SocialPlatform {
   id: string
   name: string
@@ -169,7 +169,7 @@ export function SocialConnect() {
           </p>
         </header>
 
-        {/* Social cards — flexbox so new platforms can be added without layout changes */}
+        {/* Social cards - flexbox so new platforms can be added without layout changes */}
         <div
           role="list"
           className="flex flex-wrap justify-center gap-5 sm:gap-6"

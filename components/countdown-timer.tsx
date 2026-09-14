@@ -9,7 +9,7 @@ interface TimeLeft {
   seconds: number
 }
 
-// Target launch date — update this as needed
+// Target launch date - update this as needed
 const TARGET_DATE = new Date('2027-09-01T00:00:00')
 
 function calculateTimeLeft(): TimeLeft {

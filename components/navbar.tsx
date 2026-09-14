@@ -77,7 +77,7 @@ export function Navbar() {
           <Link
             href="/"
             className="flex items-center gap-3 group"
-            aria-label="Al Musleh Foundation School — Home"
+            aria-label="Al Musleh Foundation School - Home"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -117,7 +117,7 @@ export function Navbar() {
             {/* Desktop nav links */}
             <nav className="hidden sm:flex sm:items-center sm:gap-0.5" aria-label="Main navigation">
               {navLinks.map(({ href, label, external }) => {
-                // Hash links (/#campuses) are scroll anchors — never mark as "active page".
+                // Hash links (/#campuses) are scroll anchors - never mark as "active page".
                 const isActive = !external && !href.includes('#') && isActiveFor(href, pathname)
                 return (
                   <Link
@@ -139,7 +139,7 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Apply Now CTA — desktop */}
+            {/* Apply Now CTA - desktop */}
             {/* <a
               href="/#join-amfs"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-brand-gold px-4 py-2 text-xs font-bold text-brand-navy shadow-sm shadow-brand-gold/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand-gold/25"
@@ -192,7 +192,7 @@ export function Navbar() {
           className="px-4 py-4 flex flex-col gap-1 pb-6"
         >
           {navLinks.map(({ href, label, external }) => {
-            // Hash links are scroll anchors — never mark as active.
+            // Hash links are scroll anchors - never mark as active.
             const isActive = !external && !href.includes('#') && isActiveFor(href, pathname)
             return (
               <Link

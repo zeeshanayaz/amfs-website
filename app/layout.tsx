@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Al Musleh Foundation School — Nurturing Minds, Building Futures',
+    title: 'Al Musleh Foundation School - Nurturing Minds, Building Futures',
     description:
       'Al Musleh Foundation School offers quality education rooted in Islamic values and academic excellence across five campuses in Karachi.',
     siteName: 'Al Musleh Foundation School',

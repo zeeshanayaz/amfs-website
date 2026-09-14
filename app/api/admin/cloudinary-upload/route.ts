@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   const body = await request.formData()
   const file = body.get('file')
   const requestedFolder = body.get('folder')
-  const folder = requestedFolder === 'faculty' ? 'faculty' : 'careers'
+  const folder = requestedFolder === 'faculty' || requestedFolder === 'blog' ? requestedFolder : 'careers'
   if (!(file instanceof File) || !file.type.startsWith('image/')) {
     return NextResponse.json({ error: 'A valid image file is required.' }, { status: 400 })
   }
