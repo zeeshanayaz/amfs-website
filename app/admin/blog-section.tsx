@@ -1,8 +1,9 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Bold, ImagePlus, Italic, Link as LinkIcon, Pencil, Plus, Trash2, Underline, X } from 'lucide-react'
+import Quill from 'quill'
+import { ExternalLink, ImagePlus, Pencil, Plus, Trash2, X } from 'lucide-react'
 import type { BlogCategory, BlogCategoryFormState, BlogPost, BlogPostFormState } from './types'
 
 type BlogSectionProps = {
@@ -39,18 +40,84 @@ function slugify(value: string) {
 }
 
 function RichTextEditor({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  const exec = (command: string, commandValue?: string) => { document.execCommand(command, false, commandValue); document.getElementById('blog-rich-text')?.focus() }
+  const editorRef = useRef<HTMLDivElement>(null)
+  const quillRef = useRef<Quill | null>(null)
+  const onChangeRef = useRef(onChange)
+
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
+
+  useEffect(() => {
+    if (!editorRef.current || quillRef.current) return
+
+    const quill = new Quill(editorRef.current, {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: '#blog-quill-toolbar',
+          handlers: {
+            link: () => {
+              const url = window.prompt('Link URL')
+              if (url) quill.format('link', url, 'user')
+            },
+          },
+        },
+      },
+      formats: ['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'indent', 'link'],
+    })
+
+    if (value) quill.clipboard.dangerouslyPasteHTML(value, 'silent')
+    quill.on('text-change', (_delta, _oldDelta, source) => {
+      if (source === 'user') onChangeRef.current(quill.root.innerHTML)
+    })
+    quillRef.current = quill
+
+    return () => {
+      quill.off('text-change')
+      quillRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const quill = quillRef.current
+    if (!quill || quill.root.innerHTML === value) return
+    const selection = quill.getSelection()
+    quill.clipboard.dangerouslyPasteHTML(value || '', 'silent')
+    if (selection) quill.setSelection(selection, 'silent')
+  }, [value])
+
   return (
     <div className="overflow-hidden rounded-xl border border-brand-border bg-brand-off-white">
-      <div className="flex flex-wrap gap-1 border-b border-brand-border bg-white p-2">
-        <button type="button" title="Bold" aria-label="Bold" onClick={() => exec('bold')} className="rounded-lg p-2 hover:bg-brand-light"><Bold className="size-4" /></button>
-        <button type="button" title="Italic" aria-label="Italic" onClick={() => exec('italic')} className="rounded-lg p-2 hover:bg-brand-light"><Italic className="size-4" /></button>
-        <button type="button" title="Underline" aria-label="Underline" onClick={() => exec('underline')} className="rounded-lg p-2 hover:bg-brand-light"><Underline className="size-4" /></button>
-        <button type="button" title="Add link" aria-label="Add link" onClick={() => { const url = window.prompt('Link URL'); if (url) exec('createLink', url) }} className="rounded-lg p-2 hover:bg-brand-light"><LinkIcon className="size-4" /></button>
-        <button type="button" title="Bulleted list" aria-label="Bulleted list" onClick={() => exec('insertUnorderedList')} className="rounded-lg px-2 py-1 text-sm font-bold hover:bg-brand-light">&#8226; List</button>
-        <button type="button" title="Heading" aria-label="Heading" onClick={() => exec('formatBlock', 'h2')} className="rounded-lg px-2 py-1 text-sm font-bold hover:bg-brand-light">H2</button>
+      <div id="blog-quill-toolbar" className="border-b border-brand-border bg-white">
+        <span className="ql-formats">
+          <select className="ql-header" defaultValue="" aria-label="Text style">
+            <option value="">Paragraph</option>
+            <option value="1">Heading 1</option>
+            <option value="2">Heading 2</option>
+            <option value="3">Heading 3</option>
+            <option value="4">Heading 4</option>
+            <option value="5">Heading 5</option>
+            <option value="6">Heading 6</option>
+          </select>
+          <button className="ql-bold" aria-label="Bold" />
+          <button className="ql-italic" aria-label="Italic" />
+          <button className="ql-underline" aria-label="Underline" />
+          <button className="ql-strike" aria-label="Strikethrough" />
+        </span>
+        <span className="ql-formats">
+          <button className="ql-blockquote" aria-label="Blockquote" />
+          <button className="ql-list" value="ordered" aria-label="Numbered list" />
+          <button className="ql-list" value="bullet" aria-label="Bulleted list" />
+          <button className="ql-indent" value="-1" aria-label="Decrease indent" />
+          <button className="ql-indent" value="+1" aria-label="Increase indent" />
+        </span>
+        <span className="ql-formats">
+          <button className="ql-link" aria-label="Add link" />
+          <button className="ql-clean" aria-label="Clear formatting" />
+        </span>
       </div>
-      <div id="blog-rich-text" contentEditable suppressContentEditableWarning role="textbox" aria-label="Blog post content" dangerouslySetInnerHTML={{ __html: value }} onInput={(event) => onChange(event.currentTarget.innerHTML)} className="min-h-64 p-4 text-sm leading-7 outline-none" />
+      <div ref={editorRef} aria-label="Blog post content" className="min-h-64 text-sm leading-7" />
     </div>
   )
 }
@@ -72,7 +139,21 @@ export function BlogSection(props: BlogSectionProps) {
       {message ? <p role="alert" className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{message}</p> : null}
       <div className="mb-5 flex gap-2 border-b border-brand-border"><button type="button" onClick={() => setTab('posts')} className={`border-b-2 px-4 py-3 text-sm font-bold ${tab === 'posts' ? 'border-brand-navy text-brand-navy' : 'border-transparent text-brand-dark-gray'}`}>Posts ({posts.length})</button><button type="button" onClick={() => setTab('categories')} className={`border-b-2 px-4 py-3 text-sm font-bold ${tab === 'categories' ? 'border-brand-navy text-brand-navy' : 'border-transparent text-brand-dark-gray'}`}>Categories ({categories.length})</button></div>
 
-      {tab === 'categories' ? <section className="rounded-2xl border border-brand-border bg-white p-5"><div className="mb-4 flex items-center justify-between"><h3 className="font-serif text-2xl font-bold">Blog categories</h3><button type="button" onClick={props.onOpenCategory} className="inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm font-bold hover:bg-brand-light"><Plus className="size-4" /> Add category</button></div><div className="grid gap-3">{categories.length === 0 ? <p className="rounded-xl border border-dashed border-brand-border p-8 text-center text-sm text-brand-dark-gray">No categories yet.</p> : categories.map((category) => <div key={category.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-border p-4"><div><div className="flex flex-wrap items-center gap-2"><h4 className="font-bold">{category.name}</h4><span className="text-xs text-brand-dark-gray">/{category.slug}</span><span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase ${category.is_active ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'}`}>{category.is_active ? 'Active' : 'Inactive'}</span></div>{category.description ? <p className="mt-1 text-sm text-brand-dark-gray">{category.description}</p> : null}</div><div className="flex gap-2"><button type="button" onClick={() => props.onEditCategory(category)} aria-label={`Edit ${category.name}`} className="rounded-full border border-brand-border p-2 hover:bg-brand-light"><Pencil className="size-4" /></button><button type="button" onClick={() => props.onToggleCategory(category)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{category.is_active ? 'Disable' : 'Enable'}</button><button type="button" onClick={() => props.onRemoveCategory(category.id)} aria-label={`Delete ${category.name}`} className="rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"><Trash2 className="size-4" /></button></div></div>)}</div></section> : <div className="grid gap-4">{posts.length === 0 ? <div className="rounded-2xl border border-dashed border-brand-border bg-white p-12 text-center text-brand-dark-gray">No blog posts yet.</div> : posts.map((post) => <article key={post.id} className="flex flex-col gap-4 rounded-2xl border border-brand-border bg-white p-5 sm:flex-row"><div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-brand-light sm:w-52">{post.featured_image_url ? <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" sizes="208px" /> : <div className="grid h-full place-items-center p-4 text-center text-xs font-bold text-brand-royal">Al Musleh Foundation School</div>}</div><div className="min-w-0 flex-1"><div className="mb-2 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider"><span className={`rounded-full px-3 py-1 ${post.status === 'published' ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'}`}>{post.status}</span>{post.is_featured ? <span className="rounded-full bg-brand-gold/30 px-3 py-1 text-brand-navy">Featured</span> : null}</div><h3 className="font-serif text-2xl font-bold">{post.title}</h3><p className="mt-1 text-sm text-brand-dark-gray">{post.category?.name ?? 'Uncategorized'}{post.author_name ? ` · ${post.author_name}` : ''}</p>{post.excerpt ? <p className="mt-3 line-clamp-2 text-sm leading-6 text-brand-dark-gray">{post.excerpt}</p> : null}<div className="mt-4 flex flex-wrap gap-2">{(post.tags ?? []).map((tag) => <span key={tag} className="rounded-full bg-brand-off-white px-2 py-1 text-xs text-brand-dark-gray">#{tag}</span>)}</div></div><div className="flex gap-2 sm:flex-col"><button type="button" onClick={() => props.onEditPost(post)} aria-label={`Edit ${post.title}`} className="rounded-full border border-brand-border p-2 hover:bg-brand-light"><Pencil className="size-4" /></button><button type="button" onClick={() => props.onTogglePost(post)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{post.status === 'published' ? 'Unpublish' : 'Publish'}</button><button type="button" onClick={() => props.onRemovePost(post.id)} aria-label={`Delete ${post.title}`} className="rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"><Trash2 className="size-4" /></button></div></article>)}</div>}
+      {tab === 'categories' ? <section className="rounded-2xl border border-brand-border bg-white p-5"><div className="mb-4 flex items-center justify-between"><h3 className="font-serif text-2xl font-bold">Blog categories</h3><button type="button" onClick={props.onOpenCategory} className="inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm font-bold hover:bg-brand-light"><Plus className="size-4" /> Add category</button></div><div className="grid gap-3">{categories.length === 0 ? <p className="rounded-xl border border-dashed border-brand-border p-8 text-center text-sm text-brand-dark-gray">No categories yet.</p> : categories.map((category) => <div key={category.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-border p-4"><div><div className="flex flex-wrap items-center gap-2"><h4 className="font-bold">{category.name}</h4><span className="text-xs text-brand-dark-gray">/{category.slug}</span><span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase ${category.is_active ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'}`}>{category.is_active ? 'Active' : 'Inactive'}</span></div>{category.description ? <p className="mt-1 text-sm text-brand-dark-gray">{category.description}</p> : null}</div><div className="flex gap-2"><button type="button" onClick={() => props.onEditCategory(category)} aria-label={`Edit ${category.name}`} className="rounded-full border border-brand-border p-2 hover:bg-brand-light"><Pencil className="size-4" /></button><button type="button" onClick={() => props.onToggleCategory(category)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{category.is_active ? 'Disable' : 'Enable'}</button><button type="button" onClick={() => props.onRemoveCategory(category.id)} aria-label={`Delete ${category.name}`} className="rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"><Trash2 className="size-4" /></button></div></div>)}</div></section> : <div className="grid gap-4">{posts.length === 0 ? <div className="rounded-2xl border border-dashed border-brand-border bg-white p-12 text-center text-brand-dark-gray">No blog posts yet.</div> : posts.map((post) => <article key={post.id} className="flex flex-col gap-4 rounded-2xl border border-brand-border bg-white p-5 sm:flex-row"><div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-brand-light sm:w-52">{post.featured_image_url ? <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" sizes="208px" /> : <div className="grid h-full place-items-center p-4 text-center text-xs font-bold text-brand-royal">Al Musleh Foundation School</div>}</div><div className="min-w-0 flex-1"><div className="mb-2 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider"><span className={`rounded-full px-3 py-1 ${post.status === 'published' ? 'bg-brand-light text-brand-royal' : 'bg-muted text-muted-foreground'}`}>{post.status}</span>{post.is_featured ? <span className="rounded-full bg-brand-gold/30 px-3 py-1 text-brand-navy">Featured</span> : null}</div><h3 className="font-serif text-2xl font-bold">{post.title}</h3><p className="mt-1 text-sm text-brand-dark-gray">{post.category?.name ?? 'Uncategorized'}{post.author_name ? ` · ${post.author_name}` : ''}</p>{post.excerpt ? <p className="mt-3 line-clamp-2 text-sm leading-6 text-brand-dark-gray">{post.excerpt}</p> : null}
+        <div className="mt-4 flex flex-wrap gap-2">{(post.tags ?? []).map((tag) => <span key={tag} className="rounded-full bg-brand-off-white px-2 py-1 text-xs text-brand-dark-gray">#{tag}</span>)}</div>
+      </div>
+        <div className="flex items-center gap-2 sm:flex-col sm:items-end">
+          <button type="button" onClick={() => props.onTogglePost(post)} className="rounded-full border border-brand-border px-3 py-2 text-xs font-bold">{post.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+          <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer" aria-label={`View ${post.title}`} className="size-9 shrink-0 rounded-full border border-brand-border p-2 hover:bg-brand-light">
+            <ExternalLink className="size-4" />
+          </a>
+
+          <button type="button" onClick={() => props.onEditPost(post)} aria-label={`Edit ${post.title}`} className="size-9 shrink-0 rounded-full border border-brand-border p-2 hover:bg-brand-light"><Pencil className="size-4" /></button>
+
+          {/* <button type="button" onClick={() => props.onRemovePost(post.id)} aria-label={`Delete ${post.title}`} className="size-9 shrink-0 rounded-full border border-brand-border p-2 text-destructive hover:bg-destructive/10"><Trash2 className="size-4" /></button> */}
+        </div>
+      </article>)}
+      </div>}
 
       {editingCategory ? <div className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/55 p-0 sm:items-center sm:p-6"><form onSubmit={props.onSaveCategory} className="w-full rounded-t-3xl bg-white p-6 shadow-2xl sm:max-w-lg sm:rounded-3xl sm:p-8"><div className="mb-6 flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">Blog</p><h2 className="mt-2 font-serif text-3xl font-bold">{editingCategory === 'new' ? 'Add category' : 'Edit category'}</h2></div><button type="button" onClick={props.onCloseCategory} aria-label="Close category form" className="rounded-full p-2 hover:bg-brand-light"><X className="size-5" /></button></div><div className="grid gap-4"><input required placeholder="Category name" value={categoryForm.name} onChange={(event) => props.onCategoryChange({ ...categoryForm, name: event.target.value, slug: categoryForm.slug || slugify(event.target.value) })} className={inputClass} /><input required placeholder="Slug" value={categoryForm.slug} onChange={(event) => props.onCategoryChange({ ...categoryForm, slug: slugify(event.target.value) })} className={inputClass} /><textarea rows={3} placeholder="Description (optional)" value={categoryForm.description ?? ''} onChange={(event) => props.onCategoryChange({ ...categoryForm, description: event.target.value })} className={inputClass} /><label className="flex items-center gap-3 text-sm font-semibold"><input type="checkbox" checked={categoryForm.is_active} onChange={(event) => props.onCategoryChange({ ...categoryForm, is_active: event.target.checked })} /> Active category</label><button className="rounded-full bg-brand-navy px-5 py-3 font-bold text-white hover:bg-brand-royal">Save category</button></div></form></div> : null}
 

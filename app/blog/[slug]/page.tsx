@@ -26,7 +26,7 @@ async function getPublishedPost(slug: string) {
     const supabase = createClient()
     const { data } = await supabase
         .from('blog_posts')
-        .select('title, slug, excerpt, content, featured_image_url, author_name, published_at, meta_title, meta_description, category:blog_categories(name)')
+        .select('title, slug, excerpt, content, featured_image_url, author_name, published_at, tags, meta_title, meta_description, category:blog_categories(name)')
         .eq('slug', slug)
         .eq('status', 'published')
         .maybeSingle()
@@ -58,6 +58,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (!post) notFound()
 
     const category = Array.isArray(post.category) ? post.category[0] : post.category
+    const tags = Array.isArray(post.tags) ? post.tags.filter((tag): tag is string => typeof tag === 'string') : []
     const publishedDate = post.published_at
         ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(post.published_at))
         : null
@@ -102,8 +103,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                                 <Image src={post.featured_image_url} alt={post.title} fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 896px" />
                             </div>
                         ) : null}
-                        {post.excerpt ? <p className="mb-8 text-xl leading-8 text-brand-dark-gray">{post.excerpt}</p> : null}
-                        <div className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-brand-navy prose-a:text-brand-royal" dangerouslySetInnerHTML={{ __html: post.content }} />
+                        {tags.length > 0 ? <div className="mt-4 flex flex-wrap gap-2">{tags.map((tag) => <span key={tag} className="rounded-full bg-brand-light px-2 py-1 text-xs text-brand-dark-gray">#{tag}</span>)}</div> : null}
+                        
+                        {post.excerpt ? <p className="mt-8 mb-8 text-xl leading-8 text-brand-charcoal">{post.excerpt}</p> : null}
+                        <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content }} />
                     </div>
 
                 </section>

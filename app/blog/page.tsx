@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { ScrollToTop } from '@/components/scroll-to-top';
@@ -7,15 +10,35 @@ import { BlogCard } from '@/components/blog/blog-card';
 
 import { createClient } from '@/lib/supabase/client';
 
-export default async function Blog() {
-    const supabase = createClient();
-    const { data: blogPosts } = await supabase
-        .from('blog_posts')
-        .select('title, slug, featured_image_url, published_at, category:blog_categories(name)')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
+type BlogPostRow = {
+    title: string;
+    slug: string;
+    featured_image_url: string | null;
+    published_at: string | null;
+    category: { name: string } | { name: string }[] | null;
+};
 
-    const posts = (blogPosts ?? []).map((post) => {
+export default function Blog() {
+    const [posts, setPosts] = useState<BlogPostRow[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function loadPosts() {
+            const supabase = createClient();
+            const { data: blogPosts } = await supabase
+                .from('blog_posts')
+                .select('title, slug, featured_image_url, published_at, category:blog_categories(name)')
+                .eq('status', 'published')
+                .order('published_at', { ascending: false, nullsFirst: false });
+
+            setPosts((blogPosts ?? []) as BlogPostRow[]);
+            setLoading(false);
+        }
+
+        void loadPosts();
+    }, []);
+
+    const displayPosts = posts.map((post) => {
         const category = Array.isArray(post.category) ? post.category[0] : post.category;
 
         return {
@@ -44,14 +67,18 @@ export default async function Blog() {
                             </div>
                             <a href="#journal" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent">View all stories <ArrowRight size={16} /></a>
                         </div>
-                        {posts.length === 0 ? (
+                        {loading ? (
+                            <p className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-muted-foreground">
+                                Loading stories...
+                            </p>
+                        ) : displayPosts.length === 0 ? (
                             <p className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-muted-foreground">
                                 No records found.
                             </p>
                         ) : (
                             <div className="grid gap-7 md:grid-cols-3">
-                                {posts.map((post) =>
-                                    <BlogCard key={post.title} post={post} />
+                                {displayPosts.map((post) =>
+                                    <BlogCard key={post.slug} post={post} />
                                 )}
                             </div>
                         )}
