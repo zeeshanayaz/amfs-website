@@ -1,6 +1,6 @@
 'use client'
 
-export type Job = { id: string; title: string; description: string; department: string; employment_type: string; campus_name: string; location: string; address: string; image_url: string | null; expires_at: string | null; is_active: boolean }
+export type Job = { id: string; title: string; description: string; department: string; employment_type: string; campus_name: string; location: string; address: string; image_url: string | null; expires_at: string | null; is_active: boolean; created_at: string; applications_count: number }
 export type JobApplication = { id: string; job_id: string | null; full_name: string; email: string; phone: string; cover_letter: string; resume_url: string | null; created_at: string }
 export type NewsEvent = { id: string; title: string; category: string; excerpt: string; body: string; image_url: string | null; event_date: string | null; is_published: boolean }
 export type Testimonial = { id: string; parent_name: string; student_name: string; thoughts: string; display_order: number; is_published: boolean }
@@ -11,7 +11,7 @@ export type BlogCategory = { id: string; name: string; slug: string; description
 export type BlogPost = { id: string; title: string; slug: string; excerpt: string | null; content: string; featured_image_url: string | null; author_name: string | null; category_id: string | null; tags: string[] | null; status: 'draft' | 'published'; is_featured: boolean; published_at: string | null; meta_title: string | null; meta_description: string | null; created_at: string; updated_at: string; category?: Pick<BlogCategory, 'name'> | null }
 export type BlogCategoryFormState = Omit<BlogCategory, 'id' | 'created_at' | 'updated_at'>
 export type BlogPostFormState = Omit<BlogPost, 'id' | 'created_at' | 'updated_at' | 'category'>
-export type FormState = Omit<Job, 'id'>
+export type FormState = Omit<Job, 'id' | 'created_at' | 'applications_count'>
 export type NewsFormState = Omit<NewsEvent, 'id' | 'is_published'>
 export type TestimonialFormState = Omit<Testimonial, 'id' | 'is_published'>
 export type FacultyFormState = Omit<Faculty, 'id'>

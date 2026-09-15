@@ -37,9 +37,14 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       const { data: admin } = await supabase.from('admin_users').select('id').eq('id', user.id).maybeSingle()
       if (!admin) { setLoading(false); await supabase.auth.signOut(); router.replace('/admin/login'); return }
       const [{ data: jobData }, { data: newsData }, { data: testimonialData }, { data: contactData }, { data: facultyData }, { data: campusData }, { data: categoryData }, { data: postData }] = await Promise.all([
-        supabase.from('job_posts').select('*').order('created_at', { ascending: false }), supabase.from('news_events').select('*').order('created_at', { ascending: false }), supabase.from('testimonials').select('*').order('display_order', { ascending: true }), supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }), supabase.from('faculty').select('*').order('full_name', { ascending: true }), supabase.from('campuses').select('id, name').order('name', { ascending: true }), supabase.from('blog_categories').select('*').order('name', { ascending: true }), supabase.from('blog_posts').select('*, category:blog_categories(name)').order('created_at', { ascending: false }),
+        supabase.from('job_posts').select('*, job_applications(count)').order('is_active', { ascending: false }).order('created_at', { ascending: false }), supabase.from('news_events').select('*').order('created_at', { ascending: false }), supabase.from('testimonials').select('*').order('display_order', { ascending: true }), supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }), supabase.from('faculty').select('*').order('full_name', { ascending: true }), supabase.from('campuses').select('id, name').order('name', { ascending: true }), supabase.from('blog_categories').select('*').order('name', { ascending: true }), supabase.from('blog_posts').select('*, category:blog_categories(name)').order('created_at', { ascending: false }),
       ])
-      setJobs((jobData ?? []) as Job[]); setNewsEvents((newsData ?? []) as NewsEvent[]); setTestimonials((testimonialData ?? []) as Testimonial[]); setContacts((contactData ?? []) as ContactSubmission[]); setFaculties((facultyData ?? []) as Faculty[]); setCampuses((campusData ?? []) as CampusOption[]); setBlogCategories((categoryData ?? []) as BlogCategory[]); setBlogPosts((postData ?? []) as BlogPost[]); setLoading(false)
+      const jobsWithApplicationCounts = (jobData ?? []).map((job) => {
+        const jobWithApplications = job as typeof job & { job_applications?: { count: number }[] }
+        const { job_applications: _applications, ...jobFields } = jobWithApplications
+        return { ...jobFields, applications_count: jobWithApplications.job_applications?.[0]?.count ?? 0 } as Job
+      })
+      setJobs(jobsWithApplicationCounts); setNewsEvents((newsData ?? []) as NewsEvent[]); setTestimonials((testimonialData ?? []) as Testimonial[]); setContacts((contactData ?? []) as ContactSubmission[]); setFaculties((facultyData ?? []) as Faculty[]); setCampuses((campusData ?? []) as CampusOption[]); setBlogCategories((categoryData ?? []) as BlogCategory[]); setBlogPosts((postData ?? []) as BlogPost[]); setLoading(false)
     } catch { setLoading(false); router.replace('/admin/login') }
   }
   useEffect(() => { void load() }, [])

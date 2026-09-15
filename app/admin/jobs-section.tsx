@@ -171,7 +171,7 @@ export function JobsSection({
                     onClick={() => void viewApplications(job)}
                     className="inline-flex items-center gap-2 rounded-full border border-brand-border px-3 py-2 text-xs font-bold hover:bg-brand-light"
                   >
-                    <Eye className="size-4" /> View applications
+                    <Eye className="size-4" /> View applications ({job.applications_count})
                   </button>
                   <button
                     type="button"
